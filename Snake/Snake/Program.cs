@@ -11,6 +11,7 @@ namespace Snake
     {
         static void Main(string[] args)
         {
+            int score = 0;
             Console.SetWindowSize(1, 1);
             Console.SetBufferSize(80, 25);
             Console.SetWindowSize(80, 25);
@@ -30,12 +31,20 @@ namespace Snake
              {
                 if (walls.IsHit(snake) || snake.IsHitTail())
                 {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.SetCursorPosition(32, 10);
+                    Console.Write("GAME OVER!!!");
+                    Console.SetCursorPosition(32, 11);
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write("SCORE: " + score);
+                    Console.ForegroundColor = ConsoleColor.White;
                     break;
                 }
                  if (snake.Eat(food))
                  {
                      food = foodCreator.CreateFood();
                      food.Draw();
+                     ++score;
                  }
                  else
                  {
@@ -46,7 +55,7 @@ namespace Snake
                      ConsoleKeyInfo key = Console.ReadKey();
                      snake.HandleKey(key.Key);
                  }
-                 Thread.Sleep(100);
+                 Thread.Sleep(400);
                  snake.Move();
              }
             Console.ReadKey();

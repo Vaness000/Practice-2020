@@ -52,17 +52,18 @@ namespace Snake
 
         public bool Eat(Point food)
         {
-            Point head = GetNextPoint();
+            Point head = plist.Last();
             if (head.IsHit(food))
             {
                 food.sym = head.sym;
                 plist.Add(food);
                 return true;
             }
-            else
+            else 
             {
-                return false;
+                return false; 
             }
+            
         }
         public bool IsHitTail()
         {
