@@ -40,13 +40,13 @@ namespace Snake
         }
         public void HandleKey(ConsoleKey key)
         {
-            if (key == ConsoleKey.LeftArrow)
+            if (key == ConsoleKey.LeftArrow && direction!=Direction.RIGHT)
                 direction = Direction.LEFT;
-            if (key== ConsoleKey.RightArrow)
+            if (key== ConsoleKey.RightArrow && direction != Direction.LEFT)
                 direction = Direction.RIGHT;
-            if (key== ConsoleKey.DownArrow)
+            if (key== ConsoleKey.DownArrow && direction != Direction.UP)
                 direction = Direction.DOWN;
-            if (key == ConsoleKey.UpArrow)
+            if (key == ConsoleKey.UpArrow && direction != Direction.DOWN)
                 direction = Direction.UP;
         }
 
@@ -63,6 +63,16 @@ namespace Snake
             {
                 return false;
             }
+        }
+        public bool IsHitTail()
+        {
+            var head = plist.Last();
+            for(int i = 0; i < plist.Count - 2; i++)
+            {
+                if (head.IsHit(plist[i]))
+                    return true;
+            }
+            return false;
         }
 
 
