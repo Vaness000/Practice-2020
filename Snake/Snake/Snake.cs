@@ -50,6 +50,21 @@ namespace Snake
                 direction = Direction.UP;
         }
 
+        public bool Eat(Point food)
+        {
+            Point head = GetNextPoint();
+            if (head.IsHit(food))
+            {
+                food.sym = head.sym;
+                plist.Add(food);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
 
     }
 }
