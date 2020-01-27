@@ -17,45 +17,11 @@ namespace Snake
             Point p2 = new Point(4,5,'#');
             p2.Draw();
 
-            List<int> numList = new List<int>();
-            numList.Add(0);
-            numList.Add(1);
-            numList.Add(2);
+            HorisontalLine line = new HorisontalLine(5,10,8,'+');
+            line.Draw();
 
-            int x = numList[0];
-            int y = numList[1];
-            int z = numList[2];
-
-            foreach(int i in numList)
-            {
-                Console.WriteLine(i);
-            }
-            numList.RemoveAt(0);
-
-            List<Point> plist = new List<Point>();
-            plist.Add(p1);
-            plist.Add(p2);
-
-            List<char> chars = new List<char>();
-            chars.Add('@');
-            chars.Add('&');
-            chars.Add('$');
-            chars.Add('!');
-            foreach (char i in chars)
-            {
-                Console.WriteLine(i);
-            }
-            numList.RemoveAt(0);
-
-            List<Point> plist2 = new List<Point>();
-            plist2.Add(new Point(3, 6, '*'));
-            plist2.Add(new Point(10, 10,'('));
-            plist2.Add(new Point(12, 12,')'));
-            foreach(Point p in plist2)
-            {
-                p.Draw();
-            }
-
+            VerticalLine line1 = new VerticalLine(1, 10, 20, '|');
+            line1.Draw();
 
             Console.ReadKey();
         }
