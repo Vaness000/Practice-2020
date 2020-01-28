@@ -19,13 +19,16 @@ namespace Snake
             Walls walls = new Walls(80, 25);
             walls.Draw();
             
-            Point p = new Point(4, 5, '*');
+            Point p = new Point(4, 5, '#');
             Snake snake = new Snake(p, 4, Direction.RIGHT);
             snake.Draw();
 
             FoodCreator foodCreator = new FoodCreator(80, 25, '&');
             Point food = foodCreator.CreateFood();
             food.Draw();
+
+            Console.SetCursorPosition(0, 24);
+            Console.Write("SCORE:0");
 
              while (true)
              {
@@ -44,7 +47,9 @@ namespace Snake
                  {
                      food = foodCreator.CreateFood();
                      food.Draw();
-                     ++score;
+                     score++;
+                    
+                     
                  }
                  else
                  {
@@ -55,8 +60,10 @@ namespace Snake
                      ConsoleKeyInfo key = Console.ReadKey();
                      snake.HandleKey(key.Key);
                  }
-                 Thread.Sleep(400);
+                 Thread.Sleep(200);
                  snake.Move();
+                Console.SetCursorPosition(6, 24);
+                Console.Write(score);
              }
             Console.ReadKey();
         }
