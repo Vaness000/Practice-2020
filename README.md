@@ -11,6 +11,8 @@
 * [guides](https://guides.github.com/features/mastering-markdown)
 
 ## Markdown в деталях
+Первая колонка | Вторая колонка
+---------------|---------------
 Filename extensions | .md, .markdown[1][2]
 
 Internet media type | text/markdown[2]
@@ -30,3 +32,7 @@ Extended to  | MultiMarkdown, Markdown Extra, CommonMark[6]
 Open format? | yes[7]
 
 Website | [ссылка](http://daringfireball.net/projects/markdown)
+
+## Реальный пример
+
+[Пример](https://github.com/Microsoft/TypeScript/blob/master/README.md )
