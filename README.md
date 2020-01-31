@@ -3,14 +3,14 @@
 
 Я узнал про markdown.
 
-##Markdown
+## Markdown
 
 Вы тоже можете узнать про markdown из статей:
-*[wiki_ru](https://ru.wikipedia.org/wiki/Markdown)
-*[wiki_en](https://en.wikipedia.org/wiki/Markdown )
-*[guides](https://guides.github.com/features/mastering-markdown)
+* [wiki_ru](https://ru.wikipedia.org/wiki/Markdown)
+* [wiki_en](https://en.wikipedia.org/wiki/Markdown )
+* [guides](https://guides.github.com/features/mastering-markdown)
 
-##Markdown в деталях
+## Markdown в деталях
 Filename extensions | .md, .markdown[1][2]
 
 Internet media type | text/markdown[2]
