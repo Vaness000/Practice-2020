@@ -24,12 +24,12 @@ body{
 .profile{
     top:0px;
     left:0px;
-    width:553px;
+    width:550px;
 }
 .contacts{
     top:0px;
     right: 0px;
-    width: 1040px;
+    width: 1052px;
 }
 .main{
     width: 100%;
@@ -55,6 +55,24 @@ body{
     background-color: white;
     height: 273px;
     width: 100%;
+    background:white url("images/face.png") no-repeat 30px 40px;
+    position: relative;
+    border-radius: 2px;
+}
+.name{
+    position: absolute;
+    right:42px;
+    top:95px;
+}
+.marie{
+    font-size: 39px;
+    font-family: 'Signika', sans-serif;
+}
+.bordeaux{
+    display: block;
+    font-family: 'Signika Negative', sans-serif;
+    font-size: 23px;
+    color:#667485;
 }
 .icons{
     width: 100%;
@@ -71,6 +89,8 @@ body{
     width: 25%;
     height: 100px;
     float: left;
+    padding: 23px;
+    text-align: center;
     box-sizing: border-box;
 }
 .icon1{
@@ -86,26 +106,70 @@ body{
     background-color: #33495f;
 }
 .contacts-text{
-    width: 60%;
+    width: 630px;
     height: 373px;
     float: left;
     position: relative;
     background-color: white;
+    padding-top: 55px;
+    padding-left: 41px;
+    padding-right: 70px;
+    padding-bottom: 0px;
+    box-sizing: border-box;
+}
+.title-contacts{
+
+    font-family: 'Signika', sans-serif;
+    font-size: 45px;
+    margin-bottom: 5px;
+    text-align: justify;
+    margin-bottom: 13px;
+    display: block;
+
+}
+.text-contacts{
+    display: block;
+    font-family: 'Lato', sans-serif;
+    text-align: justify;
+    line-height: 1.6;
+    font-size: 24px;
 }
 .mail-site{
-    width: 40%;
+    width: 422px;
     height: 373px;
     float: left;
     background-color: white;
-    border: 1px solid black;/*убрать после добавления контента*/
-    box-sizing: border-box;/*убрать после добавления контента*/
+    padding-top: 130px;
+    padding-left: 22px;
+    box-sizing: border-box;
+}
+.web-site,
+.mail{
+    font-family: 'Lato', sans-serif;
+    display: block;
+    box-sizing: border-box;
+    font-size: 30px;
+    
+}
+.web-site{
+    color:red;
+    margin-top: 25px;
+    font-size: 27px;
+}
+hr{
+    width: 345px;
+    margin-top:42px;
+    margin-right: 51px;
 }
 .social{
     clear: both;
-    width: 100%;
+    width: 630px;
     height: 100px;
     position: absolute;
     bottom: 0;
+    padding-right: 60px;
+    box-sizing: border-box;
+    float: left;
 }
 .social-ic1,
 .social-ic2,
@@ -113,29 +177,10 @@ body{
 .social-ic4,
 .social-ic5,
 .social-ic6{
-    width: 16.6666666%;
-    height: 100px;
     float: left;
-    background-color: white;
-    border: 1px solid black;/*убрать после добавления контента*/
-    box-sizing: border-box;/*убрать после добавления контента*/
-}
-.social-ic1{
-    
-}
-.social-ic2{
-    
-}
-.social-ic3{
-    
-}
-.social-ic4{
-   
-}
-.social-ic5{
-    
-}
-.social-ic6{
+    padding: 23px;
+    box-sizing: border-box;
+
 }
 .secret-velvet,
 .cortix,
@@ -182,4 +227,17 @@ body{
     height: 1px;
     border: 1px dotted grey;
     margin-bottom: 40px;
+}
+.ic-txt{
+    color: white;
+    font-family: 'Lato', sans-serif;
+    text-transform: uppercase;
+    font-size: 17px;
+    display: block;
+}
+.icon1>span{
+    margin-top: 12px;
+}
+.icon2>span{
+    margin-top: 9px;
 }
