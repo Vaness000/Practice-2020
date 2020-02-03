@@ -34,17 +34,19 @@ body{
 .main{
     width: 100%;
     height: 1400px;
-    
     margin-top: 50px;
     position: relative;
 }
 .left-side,
 .right-side{
-    width: 50%;
+    width: 807px;
     height: 1415px;
-    
     box-sizing: border-box;
     float: left;
+    position: absolute;
+}
+.right-side{
+    right: 0;
 }
 .footer{
     clear: both;
@@ -177,21 +179,28 @@ hr{
 .social-ic4,
 .social-ic5,
 .social-ic6{
+    margin: 0px;
     float: left;
-    padding: 23px;
+    padding-left: 30px;
+    padding-top: 30px;
+    padding-right: 15px;
     box-sizing: border-box;
+
+    padding-bottom: 27px;
 
 }
 .secret-velvet,
 .cortix,
 .ademe,
 .impec-toonga{
-    width: 100%;
+    width: 807px;
     margin-bottom: 40px;
     background-color: white;
+    box-sizing: border-box;
 }
 .secret-velvet{
     height: 430px;
+    margin-right: 20px;
 }
 .cortix{
     height: 410px;
@@ -199,6 +208,82 @@ hr{
 .ademe,
 .impec-toonga{
     height: 213px;
+}
+.left-container{
+    padding-top: 37px;
+    padding-left: 28px;
+}
+.left-side-title{
+    font-family: 'Signika', sans-serif;
+    font-size: 31px;
+}
+.sub-info{
+    padding-left: 20px;
+    font-family: 'Lato', sans-serif;
+    font-size: 22px;
+    color:#AFB6C1 ;
+
+}
+.green-text{
+    color: #28C0AB;
+    font-family: 'Signika', sans-serif;
+    font-size: 27px;
+}
+.left-list{
+    list-style-image: url("images/marker.png");
+    margin-left: 23px;
+    margin-top: 40px;
+    font-size: 21px;
+    font-family: 'Lato', sans-serif;
+}
+.left-list>li{
+    margin-top: 14px;
+}
+.card-bottom{
+    margin-left: 28px;
+    margin-top:63px;
+    font-family: 'Lato', sans-serif;
+    color:#AFB6C1 ; 
+    font-size: 19px;
+    position: relative;
+}
+.card-bottom-little{
+    margin-left: 28px;
+    margin-top:50px;
+    font-family: 'Lato', sans-serif;
+    color:#AFB6C1 ; 
+    font-size: 19px;
+    position: relative;
+}
+.place{
+    float: left;
+    margin-right: 72px; 
+}
+.year{
+    float: left;
+}
+.button-blue,
+.button-grey{
+    position: absolute;
+    border-radius: 3px;
+    background-color: #16C4EC;
+    text-align: center;
+    font-family: 'Signika Negative', sans-serif;
+    color: white;
+    font-size: 20px;
+    width: 275px;
+    padding-top: 9px;
+    padding-bottom: 12px;
+    float: left;
+    vertical-align: middle;
+    right: 33px;
+    top:-11px
+}
+.button-grey{
+    background-color:#B0BBCA ;
+}
+.cortix>ul{
+    margin-top:20px;
 }
 .yelp,
 .qoqa,
