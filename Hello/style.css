@@ -13,13 +13,14 @@ body{
     background-color: #eaedf1;
     width:100%;
     height: 373px;
-    border-radius: 2px;
+
 }
 .profile,
 .contacts{
     background-color: #eaedf1;
     height: 373px;
     position:absolute;
+    
 }
 .profile{
     top:0px;
@@ -47,6 +48,7 @@ body{
 }
 .right-side{
     right: 0;
+    height: 1480px;
 }
 .footer{
     clear: both;
@@ -59,7 +61,7 @@ body{
     width: 100%;
     background:white url("images/face.png") no-repeat 30px 40px;
     position: relative;
-    border-radius: 2px;
+    border-radius:3px;
 }
 .name{
     position: absolute;
@@ -97,6 +99,7 @@ body{
 }
 .icon1{
     background-color: #16c4ec;
+    border-bottom-left-radius: 3px;
 }
 .icon2{
     background-color: #fa5351;
@@ -106,6 +109,7 @@ body{
 }
 .icon4{
     background-color: #33495f;
+    border-bottom-right-radius:3px ;
 }
 .contacts-text{
     width: 630px;
@@ -118,6 +122,7 @@ body{
     padding-right: 70px;
     padding-bottom: 0px;
     box-sizing: border-box;
+    border-radius:3px;
 }
 .title-contacts{
 
@@ -144,6 +149,7 @@ body{
     padding-top: 130px;
     padding-left: 22px;
     box-sizing: border-box;
+    border-radius:3px;
 }
 .web-site,
 .mail{
@@ -387,21 +393,87 @@ hr{
     width: 50%;
     height: 356px;
     box-sizing: border-box;
-    border: 1px solid blueviolet;
     float: left;
     padding: 50px 30px;
 }
 .progress-bar{
-    border: 1px solid blue;
-    box-sizing: border-box;
     height: 60px;
     margin-bottom: 9px;
+    position: relative;
 }
 .progress-bar>progress{
     width: 100%;
-    margin-top: 12px;
+    margin-top: 5px;
     height: 18px;
+    -webkit-appearance: none;
+    appearance: none;
+    
+}
+.progress-bar>::-webkit-progress-value{
+    background-color: #10CDC1;
+    border-bottom-left-radius: 8px;
+    border-top-left-radius: 8px;
 }
 .progress-bar>::-webkit-progress-bar{
-    background-color: brown;
+    background-color: #DBE1E8;
+    border-radius: 8px;
+}
+.progress-right>.progress-bar>::-webkit-progress-value{
+    background-color: #16C4EC;
+}
+.progress-bar>span{
+    font-family: 'Lato', sans-serif;
+    font-size: 20px;
+}
+.percent{
+    width: 45px;
+    height: 22px;
+    background-color: #34495E;
+    font-family: 'Lato', sans-serif;
+    position: absolute;
+    top:-3px;
+    color: white;
+    border-radius: 7px;
+    font-size: 12px;
+    text-align: center;
+    padding-top: 3px;
+    box-sizing: border-box;
+}
+.percent::before{
+    content: '';
+    left: 18px; top: 22px;
+    width: 0; height: 0;
+    border-style: solid;
+    border-width: 5px;
+    border-color: #34495E  transparent transparent transparent;
+    position: absolute; /* Абсолютное позиционирование */
+}
+.left-side>div,
+.right-side>div,
+.description>div{
+    border-radius:3px;
+}
+.circle{
+    width: 26px;
+    height: 26px;
+    border-radius: 13px;
+    background-color: purple;
+    position: absolute;
+    left: -9px;
+}
+.vertical-line{
+    width: 7px;
+    background-color: #DBE1E8;
+}
+.end-year{
+    width: 91px;
+    height: 44px;
+    border-radius: 2px;
+    background-color:  #DBE1E8;
+}
+.timeline{
+    width: 7px;
+    height: 1480px;
+    position: absolute;
+    left: 857px;
 }
