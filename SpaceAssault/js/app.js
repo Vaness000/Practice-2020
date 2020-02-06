@@ -283,12 +283,12 @@ function updateEntities(dt) {
                 
             {  
                  if (enemies[i].pos[1] > pos3[1] + 5){
-                    enemies[i].pos[1] += 4;
+                    enemies[i].pos[1] += 3;
                    
                  }
                   
                  else{
-                    enemies[i].pos[1] -= 4;
+                    enemies[i].pos[1] -= 3;
                  }
                  
             }
