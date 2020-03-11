@@ -238,7 +238,7 @@ function checkCollisions() {
         var pos = enemies[i].pos;
         var size = enemies[i].sprite.size;
 
-        next:for(var j=0; j<bullets.length; j++) {
+        isHit:for(var j=0; j<bullets.length; j++) {
             var pos2 = bullets[j].pos;
             var size2 = bullets[j].sprite.size;
 
@@ -247,7 +247,7 @@ function checkCollisions() {
                 var sizeMeg = megaliths[k].sprite.size;
                 if(boxCollides(pos2,size2,posMeg,sizeMeg)){
                     bullets.splice(j,1);
-                    break next;
+                    break isHit;
                 }
             }
 
