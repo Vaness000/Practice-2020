@@ -1,3 +1,5 @@
+// A cross-browser requestAnimationFrame
+// See https://hacks.mozilla.org/2011/08/animating-with-javascript-from-setinterval-to-requestanimationframe/
 var requestAnimFrame = (function(){
     return window.requestAnimationFrame       ||
         window.webkitRequestAnimationFrame ||
@@ -9,12 +11,14 @@ var requestAnimFrame = (function(){
         };
 })();
 
+// Create the canvas
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
 canvas.width = 512;
 canvas.height = 480;
 document.body.appendChild(canvas);
 
+// The main game loop
 var lastTime;
 function main() {
     var now = Date.now();
@@ -27,6 +31,12 @@ function main() {
     requestAnimFrame(main);
 };
 
+resources.load([
+    'img/sprites.png',
+    'img/terrain.png'
+]);
+resources.onReady(init);
+
 function init() {
     terrainPattern = ctx.createPattern(resources.get('img/terrain.png'), 'repeat');
 
@@ -34,198 +44,108 @@ function init() {
         reset();
     });
 
-    megalithInit();
-    
-    mannaInit();
-    
     reset();
     lastTime = Date.now();
     main();
 }
 
-resources.load([
-    'img/sprites_02.png',
-    'img/terrain.png'
-]);
-resources.onReady(init);
-
+// Game state
 var player = {
     pos: [0, 0],
-    sprite: new Sprite('img/sprites_02.png', [0, 0], [39, 39], 16, [0, 1])
+    sprite: new Sprite('img/sprites.png', [0, 0], [39, 39], 16, [0, 1])
 };
 
 var bullets = [];
 var enemies = [];
 var explosions = [];
-var megalith = [];
-var manna = [];
+var megaliths = [];
+
+function RandomFromInterval(min,max){
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function CreateMegalith(){
+    var megalithsCount = RandomFromInterval(3,5);
+    var spriteSize = [61,61];
+    var positionOnSprite = [0,212];
+    var positionX;
+    var positionY;
+    for(var i = 0;i<megalithsCount;i++){
+       // do{
+            positionX = RandomFromInterval(70,470);
+            positionY = RandomFromInterval(70,410);//boxCollides(player.pos,player.sprite.size,[positionX,positionY],spriteSize) &&
+        //}while( CollidesMegaliths(i,spriteSize,positionX,positionY))
+        megaliths.push({
+            pos:[positionX,positionY],
+            sprite: new Sprite('img/sprites.png',positionOnSprite,spriteSize,2,[0,1,0],'vertical',false) 
+        });
+    }
+}
+function CollidesMegaliths(iteration,sizeMeg,currentX,currentY){
+    var testMegalith = {pos:[currentX,currentY],
+        size: sizeMeg
+    }
+    if(iteration == 0){
+        return false;
+    }else{
+        return boxCollides(megaliths[iteration-1].pos,sizeMeg,testMegalith.pos,testMegalith.size)|| (Math.abs(currentX - megaliths[iteration-1].pos[0])<61)
+        || (Math.abs(currentY - megaliths[iteration-1].pos[1])<61);
+    }
+}
 
 var lastFire = Date.now();
 var gameTime = 0;
 var isGameOver;
 var terrainPattern;
 
+// The score
 var score = 0;
 var scoreEl = document.getElementById('score');
 
-var scoreManna = 0;
-var scoreMannaEl = document.getElementById('scoreManna');
-
+// Speed in pixels per second
 var playerSpeed = 200;
 var bulletSpeed = 500;
 var enemySpeed = 100;
 
-
-function createManna()
-{
-    var mannaPos = [Math.floor(Math.random() * ((canvas.width - 100) + 1)) + 10,
-        Math.floor(Math.random() * ((canvas.height - 100) + 1))];
-    
-    var mannaSize = [55, 45];  
-
-    if (boxCollides([50, canvas.height / 2], player.sprite.size, mannaPos,
-        mannaSize))
-        return;
-
-    for (var i = 0; i < megalith.length; i++)
-    {
-        var pos = megalith[i].pos;
-        var size = megalith[i].sprite.size;
-
-        if (boxCollides(pos, size, mannaPos, mannaSize))
-        {
-            return;
-        }
-    }
-
-    return manna.push({
-            pos: mannaPos,
-            sprite: new Sprite('img/sprites_02.png', [0, 165], mannaSize, 5, [0, 1])
-        });
-}
-
-function mannaInit() 
-{
-    while (manna.length < 3)
-    {
-        createManna();
-    }
-}
-
-function forEachMeg(pos)
-{
-    for (var i = 0; i < megalith.length; i++)
-    {
-        if (boxCollides(pos, megalith[i].sprite.size,
-            megalith[i].pos, megalith[i].sprite.size)
-            || (Math.abs(pos[0] - megalith[i].pos[0]) < 60)
-            || (Math.abs(pos[1] - megalith[i].pos[1]) < 60))
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-function megalithInit() 
-{
-    var megalithPos = []; 
-
-    var megalithSize = [55, 45]; 
-
-    while(megalith.length < 4)
-    {
-        megalithPos = [Math.floor(Math.random() * ((canvas.width - 130) + 1)) + 10,
-            Math.floor(Math.random() * ((canvas.height - 130) + 1))];  
-
-        if (boxCollides([50, canvas.height / 2], player.sprite.size, megalithPos, megalithSize)
-            || forEachMeg(megalithPos))
-        {
-           continue;           
-        }  
-        
-        megalith.push({
-            pos: megalithPos,
-            sprite: new Sprite('img/sprites_02.png', [0, 217], megalithSize, 0, [0, 1])
-        });
-    }
-};
-
+// Update game objects
 function update(dt) {
     gameTime += dt;
 
     handleInput(dt);
     updateEntities(dt);
 
+    // It gets harder over time by adding enemies using this
+    // equation: 1-.993^gameTime
     if(Math.random() < 1 - Math.pow(.993, gameTime)) {
         enemies.push({
             pos: [canvas.width,
                   Math.random() * (canvas.height - 39)],
-            sprite: new Sprite('img/sprites_02.png', [0, 78], [80, 39],
+            sprite: new Sprite('img/sprites.png', [0, 78], [80, 39],
                                6, [0, 1, 2, 3, 2, 1])
         });
-    }
-
-    if ((manna.length < 8) && (Math.random() < 1 - Math.pow(.993, gameTime)))
-    {
-        createManna();
     }
 
     checkCollisions();
 
     scoreEl.innerHTML = score;
-    scoreMannaEl.innerHTML = scoreManna;
 };
-
-
-function collideMegPlayer()
-{
-    for (var i = 0; i < megalith.length; i++)
-    {
-        var pos = megalith[i].pos;
-        var size = megalith[i].sprite.size;
-
-        if (boxCollides(player.pos, player.sprite.size, pos, size))
-        {
-            return pos;
-        }
-    }
-
-    return false;
-}
 
 function handleInput(dt) {
     if(input.isDown('DOWN') || input.isDown('s')) {
-
-        if ((collideMegPlayer()[1] > player.pos[1]))
-            return;
-
         player.pos[1] += playerSpeed * dt;
     }
 
     if(input.isDown('UP') || input.isDown('w')) {
-
-        if ((collideMegPlayer()[1] < player.pos[1]))
-            return;
-
         player.pos[1] -= playerSpeed * dt;
     }
 
     if(input.isDown('LEFT') || input.isDown('a')) {
-
-
-        if ((collideMegPlayer()[0] < player.pos[0]))
-            return;
-
         player.pos[0] -= playerSpeed * dt;
     }
 
     if(input.isDown('RIGHT') || input.isDown('d')) {
-
-        if ((collideMegPlayer()[0] > player.pos[0]))
-            return;
-
         player.pos[0] += playerSpeed * dt;
     }
 
@@ -237,21 +157,23 @@ function handleInput(dt) {
 
         bullets.push({ pos: [x, y],
                        dir: 'forward',
-                       sprite: new Sprite('img/sprites_02.png', [0, 39], [18, 8]) });
+                       sprite: new Sprite('img/sprites.png', [0, 39], [18, 8]) });
         bullets.push({ pos: [x, y],
                        dir: 'up',
-                       sprite: new Sprite('img/sprites_02.png', [0, 50], [9, 5]) });
+                       sprite: new Sprite('img/sprites.png', [0, 50], [9, 5]) });
         bullets.push({ pos: [x, y],
                        dir: 'down',
-                       sprite: new Sprite('img/sprites_02.png', [0, 60], [9, 5]) });
+                       sprite: new Sprite('img/sprites.png', [0, 60], [9, 5]) });
 
         lastFire = Date.now();
     }
 }
 
 function updateEntities(dt) {
+    // Update the player sprite animation
     player.sprite.update(dt);
 
+    // Update all the bullets
     for(var i=0; i<bullets.length; i++) {
         var bullet = bullets[i];
 
@@ -262,6 +184,7 @@ function updateEntities(dt) {
             bullet.pos[0] += bulletSpeed * dt;
         }
 
+        // Remove the bullet if it goes offscreen
         if(bullet.pos[1] < 0 || bullet.pos[1] > canvas.height ||
            bullet.pos[0] > canvas.width) {
             bullets.splice(i, 1);
@@ -269,63 +192,31 @@ function updateEntities(dt) {
         }
     }
 
+    // Update all the enemies
     for(var i=0; i<enemies.length; i++) {
         enemies[i].pos[0] -= enemySpeed * dt;
         enemies[i].sprite.update(dt);
 
-        for (var k = 0; k < megalith.length; k++)
-        {
-            var pos3 = megalith[k].pos;
-            var size3 = megalith[k].sprite.size;
-
-            if (boxCollides([enemies[i].pos[0] - 15, enemies[i].pos[1]], 
-                enemies[i].sprite.size, pos3, size3))
-                
-            {  
-                 if (enemies[i].pos[1] > pos3[1] + 5){
-                    enemies[i].pos[1] += 4;
-                   
-                 }
-                  
-                 else{
-                    enemies[i].pos[1] -= 4;
-                 }
-                 
-            }
-        }
-            
-            
-        
-
+        // Remove if offscreen
         if(enemies[i].pos[0] + enemies[i].sprite.size[0] < 0) {
             enemies.splice(i, 1);
             i--;
         }
     }
 
-    for(var l = 0; l < manna.length; l++)
-    {
-        manna[l].sprite.update(dt);
-    }
-
-    for(var i=0; i<mannaEat.length; i++) {
-        mannaEat[i].sprite.update(dt);
-
-        if(mannaEat[i].sprite.done) {
-            mannaEat.splice(i, 1);
-            i--;
-        }
-    }
-
+    // Update all the explosions
     for(var i=0; i<explosions.length; i++) {
         explosions[i].sprite.update(dt);
 
+        // Remove if animation is done
         if(explosions[i].sprite.done) {
             explosions.splice(i, 1);
             i--;
         }
     }
 }
+
+// Collisions
 
 function collides(x, y, r, b, x2, y2, r2, b2) {
     return !(r <= x2 || x > r2 ||
@@ -339,77 +230,48 @@ function boxCollides(pos, size, pos2, size2) {
                     pos2[0] + size2[0], pos2[1] + size2[1]);
 }
 
-function createExplosion(pos)
-{
-    explosions.push({
-        pos: pos,
-        sprite: new Sprite('img/sprites_02.png',
-                           [0, 117],
-                           [39, 39],
-                           16,
-                           [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-                           null,
-                           true)
-    });
-
-}
-
-var mannaEat = [];
-
 function checkCollisions() {
     checkPlayerBounds();
-
-    for (var l = 0; l < manna.length; l++)
-    {
-        var pos4 = manna[l].pos;
-        var size4 = manna[l].sprite.size;
-
-        if (boxCollides(player.pos, player.sprite.size, pos4, size4))
-        {
-            mannaEat.push({
-                pos: pos4,
-                sprite: new Sprite('img/sprites_02.png', [0, 165], size4, 5, [0, 1, 2, 3, 4],
-                null, true)
-            });
-          
-            manna.splice(l, 1);
-
-            scoreManna += 1;
-
-            break;
-        }
-    }
     
+    // Run collision detection for all enemies and bullets
     for(var i=0; i<enemies.length; i++) {
         var pos = enemies[i].pos;
         var size = enemies[i].sprite.size;
 
-        top: for(var j=0; j<bullets.length; j++) {
+        next:for(var j=0; j<bullets.length; j++) {
             var pos2 = bullets[j].pos;
             var size2 = bullets[j].sprite.size;
 
-            for (var k = 0; k < megalith.length; k++)
-            {
-                var pos3 = megalith[k].pos;
-                var size3 = megalith[k].sprite.size;
-
-                if (boxCollides(pos2, size2, pos3, size3))
-                {
-                    createExplosion(pos2);
-
-                    bullets.splice(j, 1);
-                    break top;
+            for (var k = 0;k<megaliths.length;k++){
+                var posMeg = megaliths[k].pos;
+                var sizeMeg = megaliths[k].sprite.size;
+                if(boxCollides(pos2,size2,posMeg,sizeMeg)){
+                    bullets.splice(j,1);
+                    break next;
                 }
             }
 
             if(boxCollides(pos, size, pos2, size2)) {
+                // Remove the enemy
                 enemies.splice(i, 1);
                 i--;
 
+                // Add score
                 score += 100;
 
-                createExplosion(pos);
+                // Add an explosion
+                explosions.push({
+                    pos: pos,
+                    sprite: new Sprite('img/sprites.png',
+                                       [0, 117],
+                                       [39, 39],
+                                       16,
+                                       [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                                       null,
+                                       true)
+                });
 
+                // Remove the bullet and stop this iteration
                 bullets.splice(j, 1);
                 break;
             }
@@ -422,6 +284,7 @@ function checkCollisions() {
 }
 
 function checkPlayerBounds() {
+    // Check bounds
     if(player.pos[0] < 0) {
         player.pos[0] = 0;
     }
@@ -437,10 +300,12 @@ function checkPlayerBounds() {
     }
 }
 
+// Draw everything
 function render() {
     ctx.fillStyle = terrainPattern;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    // Render the player if the game isn't over
     if(!isGameOver) {
         renderEntity(player);
     }
@@ -448,9 +313,7 @@ function render() {
     renderEntities(bullets);
     renderEntities(enemies);
     renderEntities(explosions);
-    renderEntities(megalith);
-    renderEntities(manna);
-    renderEntities(mannaEat);
+    renderEntities(megaliths);
 };
 
 function renderEntities(list) {
@@ -466,23 +329,23 @@ function renderEntity(entity) {
     ctx.restore();
 }
 
+// Game over
 function gameOver() {
     document.getElementById('game-over').style.display = 'block';
     document.getElementById('game-over-overlay').style.display = 'block';
     isGameOver = true;
 }
 
+// Reset game to original state
 function reset() {
     document.getElementById('game-over').style.display = 'none';
     document.getElementById('game-over-overlay').style.display = 'none';
     isGameOver = false;
     gameTime = 0;
     score = 0;
-    scoreManna = 0;
-
+    CreateMegalith();
     enemies = [];
     bullets = [];
-    manna.length = 3;
 
     player.pos = [50, canvas.height / 2];
 };

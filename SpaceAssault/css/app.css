@@ -33,13 +33,6 @@ canvas {
     font-size: 2em;
 }
 
-#scoreManna {
-    float: right;
-    margin-right: -140px;
-    color: blue;
-    font-size: 2em;
-}
-
 .key {
     color: #aaffdd;
 }
