@@ -132,62 +132,56 @@ function update(dt) {
 
     scoreEl.innerHTML = score;
 };
-function PlayerNearMegalith(){
-    for(var i = 0;i<megaliths.length;i++){
-        if (boxCollides(player.pos,player.sprite.size
-            ,megaliths[i].pos,megaliths[i].sprite.size)){
-            
-            return true;
+
+
+//проверка на столкновение игрока и мегалита
+function PlayerNearMegalith()
+{
+    for (var i = 0; i < megaliths.length; i++)
+    {
+
+        if (boxCollides(player.pos, player.sprite.size
+            , megaliths[i].pos, megaliths[i].sprite.size))
+        {
+            return megaliths[i];
         }
     }
+
     return false;
 }
-
+//если столкновение произошло и дальнейшее движение невозможно, то выход из функции
 function handleInput(dt) {
     if(input.isDown('DOWN') || input.isDown('s')) {
-        
-      if(PlayerNearMegalith()&&player.dir == 'down'){
-        player.pos[1] += 0; 
-       }else{
-           player.pos[1] += playerSpeed * dt;}
-           player.dir = 'down';
-        
-        
-        
+        if(PlayerNearMegalith()!= false){
+        if ((PlayerNearMegalith().pos[1] > player.pos[1]))
+            return;
+        }
+        player.pos[1] += playerSpeed * dt;
     }
 
     if(input.isDown('UP') || input.isDown('w')) {
-        
-        if(PlayerNearMegalith()&&player.dir == 'up'){
-           player.pos[1] -= 0; 
-           }else
-           {
-               player.pos[1] -= playerSpeed * dt;}
-               player.dir = 'up';
-            
-        
-        
+        if(PlayerNearMegalith()!= false){
+        if ((PlayerNearMegalith().pos[1] < player.pos[1]))
+            return;
+        }
+        player.pos[1] -= playerSpeed * dt;
     }
 
     if(input.isDown('LEFT') || input.isDown('a')) {
-        
-        if(PlayerNearMegalith() &&player.dir == 'left'){
-           player.pos[0] -= 0; 
-        }else{
-        player.pos[0] -= playerSpeed * dt;
+
+        if(PlayerNearMegalith()!= false){
+        if ((PlayerNearMegalith().pos[0] < player.pos[0]))
+            return;
         }
-        player.dir = 'left';
-        
-        
+        player.pos[0] -= playerSpeed * dt;
     }
 
     if(input.isDown('RIGHT') || input.isDown('d')) {
-       if(PlayerNearMegalith() &&player.pos[0]>){
-           player.pos[0] += 0; 
-       }else{
-        player.pos[0] += playerSpeed * dt;}
-        player.dir = 'right';
-        
+        if(PlayerNearMegalith()!= false){
+        if ((PlayerNearMegalith().pos[0] > player.pos[0]))
+            return;
+        }
+        player.pos[0] += playerSpeed * dt;
     }
 
     if(input.isDown('SPACE') &&
@@ -278,7 +272,7 @@ function checkCollisions() {
     for(var i=0; i<enemies.length; i++) {
         var pos = enemies[i].pos;
         var size = enemies[i].sprite.size;
-
+        // проверка на столкновене мегалита и пули
         isHit:for(var j=0; j<bullets.length; j++) {
             var pos2 = bullets[j].pos;
             var size2 = bullets[j].sprite.size;
@@ -286,6 +280,8 @@ function checkCollisions() {
             for (var k = 0;k<megaliths.length;k++){
                 var posMeg = megaliths[k].pos;
                 var sizeMeg = megaliths[k].sprite.size;
+                //если пуля и мегалит столкнулись то пуля удаляется 
+                //из массива и переход к проверке следующей пули
                 if(boxCollides(pos2,size2,posMeg,sizeMeg)){
                     bullets.splice(j,1);
                     break isHit;
