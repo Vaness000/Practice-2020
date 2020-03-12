@@ -73,11 +73,12 @@ function CreateMegalith(){
     var positionOnSprite = [0,217];
     var positionX;
     var positionY;
+    
     for(var i = 0;i<megalithsCount;i++){
-        do{
+        //do{
             positionX = RandomFromInterval(70,470);
             positionY = RandomFromInterval(70,410);//boxCollides(player.pos,player.sprite.size,[positionX,positionY],spriteSize) &&
-        }while( CollidesMegaliths(i,spriteSize,positionX,positionY) )
+        //}while( CollidesMegaliths(i,positionX,positionY) )
         megaliths.push({
             pos:[positionX,positionY],
             sprite: new Sprite('img/sprites.png',positionOnSprite,spriteSize,2,[0,1,0],'vertical',false) 
@@ -85,18 +86,16 @@ function CreateMegalith(){
     }
 }
 //мегалиты друг на друге?
-function CollidesMegaliths(iteration,sizeMeg,currentX,currentY){
-    var testMegalith = {pos:[currentX,currentY],
-        size: [sizeMeg[0]+100,sizeMeg[1]+100]
-    }
+function CollidesMegaliths(iteration,pos,currentX,currentY){
     
     if(iteration == 0){
         return false;
     }else{
-        var currentMeg = megaliths[iteration-1];
-        return boxCollides(testMegalith.pos,testMegalith.size,currentMeg.pos,currentMeg.sprite.size);
+        var pos = megaliths[iteration-1].pos;
+        return (Math.abs(currentX-pos[0])>200 && Math.abs(currentY-pos[1])>200);
     }
 }
+
 
 var lastFire = Date.now();
 var gameTime = 0;
