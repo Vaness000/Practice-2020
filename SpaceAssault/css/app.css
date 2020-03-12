@@ -19,6 +19,7 @@ canvas {
     width: 512px;
     margin: 0 auto;
     margin-top: 2em;
+    position: relative;
 }
 
 #instructions {
@@ -32,7 +33,25 @@ canvas {
     color: white;
     font-size: 2em;
 }
-
+#mana{
+    
+    color: yellow;
+    font-size:2em;
+    top:0px;
+    display: inline;
+    
+}
+#mannaTxt{
+    font-size:2em;
+    
+    color: white;
+    display: inline;
+}
+.container{
+    
+    position: absolute;
+    right: 100px;
+}
 .key {
     color: #aaffdd;
 }
