@@ -66,7 +66,7 @@ function RandomFromInterval(min,max){
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
+//создание мегалитов
 function CreateMegalith(){
     var megalithsCount = RandomFromInterval(3,5);
     var spriteSize = [55,50];
@@ -74,25 +74,27 @@ function CreateMegalith(){
     var positionX;
     var positionY;
     for(var i = 0;i<megalithsCount;i++){
-       // do{
+        do{
             positionX = RandomFromInterval(70,470);
             positionY = RandomFromInterval(70,410);//boxCollides(player.pos,player.sprite.size,[positionX,positionY],spriteSize) &&
-        //}while( CollidesMegaliths(i,spriteSize,positionX,positionY))
+        }while( CollidesMegaliths(i,spriteSize,positionX,positionY) )
         megaliths.push({
             pos:[positionX,positionY],
             sprite: new Sprite('img/sprites.png',positionOnSprite,spriteSize,2,[0,1,0],'vertical',false) 
         });
     }
 }
+//мегалиты друг на друге?
 function CollidesMegaliths(iteration,sizeMeg,currentX,currentY){
     var testMegalith = {pos:[currentX,currentY],
-        size: sizeMeg
+        size: [sizeMeg[0]+100,sizeMeg[1]+100]
     }
+    
     if(iteration == 0){
         return false;
     }else{
-        return boxCollides(megaliths[iteration-1].pos,sizeMeg,testMegalith.pos,testMegalith.size)|| (Math.abs(currentX - megaliths[iteration-1].pos[0])<61)
-        || (Math.abs(currentY - megaliths[iteration-1].pos[1])<61);
+        var currentMeg = megaliths[iteration-1];
+        return boxCollides(testMegalith.pos,testMegalith.size,currentMeg.pos,currentMeg.sprite.size);
     }
 }
 
@@ -128,7 +130,7 @@ function update(dt) {
         });
     }
 
-    checkCollisions();
+    checkCollisions(dt);
 
     scoreEl.innerHTML = score;
 };
@@ -265,8 +267,9 @@ function boxCollides(pos, size, pos2, size2) {
                     pos2[0] + size2[0], pos2[1] + size2[1]);
 }
 
-function checkCollisions() {
+function checkCollisions(dt) {
     checkPlayerBounds();
+    CheckEnemyBounds(dt);
     
     // Run collision detection for all enemies and bullets
     for(var i=0; i<enemies.length; i++) {
@@ -341,6 +344,20 @@ function checkPlayerBounds() {
         var megPos = megaliths[i].pos;
     }
 
+}
+//обход мегалитов кораблями
+function CheckEnemyBounds(dt){
+    for(var i = 0;i<enemies.length;i++){
+        var enemyPos = enemies[i].pos;
+        var enemySize = enemies[i].sprite.size;
+        for(var j = 0;j<megaliths.length;j++){
+            var megalithPos = megaliths[j].pos;
+            var megalithSize = megaliths[j].sprite.size;
+            if(boxCollides([enemyPos[0]-55,enemyPos[1]],enemySize,megalithPos,megalithSize)){
+                enemies[i].pos[1]-=enemySpeed * dt;
+            } 
+        }
+    }
 }
 
 // Draw everything
