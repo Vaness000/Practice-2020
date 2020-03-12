@@ -52,7 +52,8 @@ function init() {
 // Game state
 var player = {
     pos: [0, 0],
-    sprite: new Sprite('img/sprites.png', [0, 0], [39, 39], 16, [0, 1])
+    sprite: new Sprite('img/sprites.png', [0, 0], [39, 39], 16, [0, 1]),
+    dir: undefined
 };
 
 var bullets = [];
@@ -68,8 +69,8 @@ function RandomFromInterval(min,max){
 
 function CreateMegalith(){
     var megalithsCount = RandomFromInterval(3,5);
-    var spriteSize = [61,61];
-    var positionOnSprite = [0,212];
+    var spriteSize = [55,50];
+    var positionOnSprite = [0,217];
     var positionX;
     var positionY;
     for(var i = 0;i<megalithsCount;i++){
@@ -131,22 +132,62 @@ function update(dt) {
 
     scoreEl.innerHTML = score;
 };
+function PlayerNearMegalith(){
+    for(var i = 0;i<megaliths.length;i++){
+        if (boxCollides(player.pos,player.sprite.size
+            ,megaliths[i].pos,megaliths[i].sprite.size)){
+            
+            return true;
+        }
+    }
+    return false;
+}
 
 function handleInput(dt) {
     if(input.isDown('DOWN') || input.isDown('s')) {
-        player.pos[1] += playerSpeed * dt;
+        
+      if(PlayerNearMegalith()&&player.dir == 'down'){
+        player.pos[1] += 0; 
+       }else{
+           player.pos[1] += playerSpeed * dt;}
+           player.dir = 'down';
+        
+        
+        
     }
 
     if(input.isDown('UP') || input.isDown('w')) {
-        player.pos[1] -= playerSpeed * dt;
+        
+        if(PlayerNearMegalith()&&player.dir == 'up'){
+           player.pos[1] -= 0; 
+           }else
+           {
+               player.pos[1] -= playerSpeed * dt;}
+               player.dir = 'up';
+            
+        
+        
     }
 
     if(input.isDown('LEFT') || input.isDown('a')) {
+        
+        if(PlayerNearMegalith() &&player.dir == 'left'){
+           player.pos[0] -= 0; 
+        }else{
         player.pos[0] -= playerSpeed * dt;
+        }
+        player.dir = 'left';
+        
+        
     }
 
     if(input.isDown('RIGHT') || input.isDown('d')) {
-        player.pos[0] += playerSpeed * dt;
+       if(PlayerNearMegalith() &&player.pos[0]>){
+           player.pos[0] += 0; 
+       }else{
+        player.pos[0] += playerSpeed * dt;}
+        player.dir = 'right';
+        
     }
 
     if(input.isDown('SPACE') &&
@@ -298,6 +339,12 @@ function checkPlayerBounds() {
     else if(player.pos[1] > canvas.height - player.sprite.size[1]) {
         player.pos[1] = canvas.height - player.sprite.size[1];
     }
+    var currentPosY= player.pos[1];
+
+    for(var i = 0;i<megaliths.length;i++){
+        var megPos = megaliths[i].pos;
+    }
+
 }
 
 // Draw everything
@@ -343,9 +390,11 @@ function reset() {
     isGameOver = false;
     gameTime = 0;
     score = 0;
+    megaliths=[];
     CreateMegalith();
     enemies = [];
     bullets = [];
+    
 
     player.pos = [50, canvas.height / 2];
 };
