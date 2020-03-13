@@ -59,6 +59,7 @@ var player = {
 var bullets = [];
 var enemies = [];
 var explosions = [];
+var mannaExplosions = [];
 var megaliths = [];
 var manna = [];
 
@@ -94,29 +95,24 @@ function CreateMegalithAndManna(){
             pos:[positionX,positionY],
             sprite: new Sprite('img/sprites.png',[0,165],[55,45],2, [0, 1]) 
         });
-        if(MannaNearMegalith(manna[i].pos,manna[i].sprite.size)){
-            manna.splice(i,1);
-            i--;
-        }
+        
     }
 }
 function AddMana(){
     var positionX = RandomFromInterval(70,470);
     var positionY = RandomFromInterval(70,410);
-manna.push({
-    pos:[positionX,positionY],
-    sprite: new Sprite('img/sprites.png',[0,165],[55,45],2, [0, 1]) 
+    manna.push({
+        pos:[positionX,positionY],
+        sprite: new Sprite('img/sprites.png',[0,165],[55,45],2, [0, 1]) 
 });
-if(MannaNearMegalith(manna[manna.length-1].pos,manna[manna.length-1].sprite.size)){
-    manna.splice(manna.length-1,1);
 }
-}
+
 function MannaNearMegalith(mannaPos,mannaSize){
     for(var i = 0;i<megaliths.length;i++){
         return boxCollides(mannaPos,mannaSize,megaliths[i].pos,
-            megaliths[i].sprite.size);
+           megaliths[i].sprite.size)|| (Math.abs(mannaPos[0]));
     }
-    return false;
+    
 }
 
 //мегалиты друг на друге?
@@ -297,6 +293,13 @@ function updateEntities(dt) {
             i--;
         }
     }
+    for (var i = 0;i<mannaExplosions.length;i++){
+        mannaExplosions[i].sprite.update(dt);
+        if(mannaExplosions[i].sprite.done){
+            mannaExplosions.splice(i,1);
+            i--;
+        }
+    }
     for (var i = 0;i<manna.length;i++){
         var mannaPos = manna[i].pos;
         var mannaSize = manna[i].sprite.size;
@@ -304,6 +307,14 @@ function updateEntities(dt) {
         if(boxCollides(player.pos,player.sprite.size,mannaPos,mannaSize)){
             manna.splice(i,1);
             scoreMana++;
+            {
+                    mannaExplosions.push({
+                        pos: mannaPos,
+                        sprite: new Sprite('img/sprites.png',[0,165],[55,45],10, [0, 1,2,3],null,
+                        true)
+                    });
+                
+            }
         }
     }
     
@@ -377,6 +388,7 @@ function checkCollisions(dt) {
             gameOver();
         }
     }
+    
 }
 
 function checkPlayerBounds() {
@@ -430,6 +442,7 @@ function render() {
     renderEntities(bullets);
     renderEntities(enemies);
     renderEntities(explosions);
+    renderEntities(mannaExplosions);
     
 };
 
@@ -463,6 +476,7 @@ function reset() {
     scoreMana = 0;
     megaliths=[];
     manna = [];
+    mannaExplosions = [];
     CreateMegalithAndManna();
     enemies = [];
     bullets = [];
