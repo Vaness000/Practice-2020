@@ -43,7 +43,6 @@ function init() {
     document.getElementById('play-again').addEventListener('click', function() {
         reset();
     });
-    CreateMegalithAndManna();
     reset();
     lastTime = Date.now();
     main();
@@ -62,6 +61,8 @@ var explosions = [];
 var mannaExplosions = [];
 var megaliths = [];
 var manna = [];
+var megalithsCount = RandomFromInterval(3,5);
+var mannaCount = RandomFromInterval(3,8);
 
 function RandomFromInterval(min,max){
     min = Math.ceil(min);
@@ -69,15 +70,14 @@ function RandomFromInterval(min,max){
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 //создание мегалитов и манны
-function CreateMegalithAndManna(){
-    var megalithsCount = RandomFromInterval(3,5);
-    var mannaCount = RandomFromInterval(3,8);
-    var spriteSize = [55,50];
-    var positionOnSprite = [0,217];
-    var positionX;
-    var positionY;
+function CreateMegalith(){
+    do{
+        AddMegalith();
+    }while(megaliths.length<megalithsCount)
     
-    for(var i = 0;i<megalithsCount;i++){
+    
+    
+    /*for(var i = 0;i<megalithsCount;i++){
         //do{
             positionX = RandomFromInterval(70,470);
             positionY = RandomFromInterval(70,410);//boxCollides(player.pos,player.sprite.size,[positionX,positionY],spriteSize) &&
@@ -87,7 +87,7 @@ function CreateMegalithAndManna(){
             sprite: new Sprite('img/sprites.png',positionOnSprite,spriteSize,1,[0,1],'vertical',false) 
         });
     }
-    for(var i = 0;i<mannaCount;i++){
+    /*for(var i = 0;i<mannaCount;i++){
             positionX = RandomFromInterval(70,470);
             positionY = RandomFromInterval(70,410);//boxCollides(player.pos,player.sprite.size,[positionX,positionY],spriteSize) &&
         //}while( CollidesMegaliths(i,positionX,positionY) )
@@ -96,24 +96,53 @@ function CreateMegalithAndManna(){
             sprite: new Sprite('img/sprites.png',[0,165],[55,45],2, [0, 1]) 
         });
         
+    }*/
+}
+function AddMegalith(){
+    var positionX = RandomFromInterval(70,470);
+    var positionY = RandomFromInterval(70,410);
+    for (var i = 0;i<megaliths.length;i++){
+        if(boxCollides([positionX,positionY],[55,50],megaliths[i].pos,megaliths[i].sprite.size)){
+            return;
+        }
+        
     }
+
+    return megaliths.push({
+        pos:[positionX,positionY],
+        sprite: new Sprite('img/sprites.png',[0,217],[55,50],1,[0,1],'vertical',false)
+    });
+}
+function CreateManna(){
+   
+    do{
+        AddMana();
+    }while(manna.length<mannaCount)
 }
 function AddMana(){
     var positionX = RandomFromInterval(70,470);
     var positionY = RandomFromInterval(70,410);
-    manna.push({
+
+
+    for (var i = 0;i<megaliths.length;i++){
+        if(boxCollides([positionX,positionY],[55,50],megaliths[i].pos,megaliths[i].sprite.size)){
+            return;
+        }
+        
+    }
+    for (var i = 0;i<manna.length;i++){
+        if(boxCollides([positionX,positionY],[55,45],manna[i].pos,manna[i].sprite.size)){
+            return;
+        }
+        
+    }
+    return manna.push({
         pos:[positionX,positionY],
         sprite: new Sprite('img/sprites.png',[0,165],[55,45],2, [0, 1]) 
 });
 }
 
-function MannaNearMegalith(mannaPos,mannaSize){
-    for(var i = 0;i<megaliths.length;i++){
-        return boxCollides(mannaPos,mannaSize,megaliths[i].pos,
-           megaliths[i].sprite.size)|| (Math.abs(mannaPos[0]));
-    }
-    
-}
+
 
 //мегалиты друг на друге?
 function CollidesMegaliths(iteration,currentX,currentY){
@@ -477,7 +506,8 @@ function reset() {
     megaliths=[];
     manna = [];
     mannaExplosions = [];
-    CreateMegalithAndManna();
+    CreateManna();
+    CreateMegalith();
     enemies = [];
     bullets = [];
     
