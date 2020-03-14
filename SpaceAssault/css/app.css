@@ -41,16 +41,21 @@ canvas {
     display: inline;
     
 }
-#mannaTxt{
+#mannaTxt,
+#scoreTxt{
     font-size:2em;
-    
+    right: 50px;
     color: white;
     display: inline;
 }
-.container{
+
+.container,.container1{
     
     position: absolute;
-    right: 100px;
+    right: 30px;
+}
+.container1{
+    top:50px;
 }
 .key {
     color: #aaffdd;
