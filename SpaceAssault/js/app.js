@@ -100,14 +100,19 @@ function CreateMegalith(){
     }*/
 }
 //создание одного мегалита
+//исправил логику появления мегалитов
 function AddMegalith(){
-    var positionX = RandomFromInterval(70,470);
+    var positionX = RandomFromInterval(70,410);
     var positionY = RandomFromInterval(70,410);
+    //boxCollides([positionX,positionY],[55,50],megaliths[i].pos,megaliths[i].sprite.size)
     for (var i = 0;i<megaliths.length;i++){
-        if(boxCollides([positionX,positionY],[55,50],megaliths[i].pos,megaliths[i].sprite.size)){
+        if((Math.abs(positionX-megaliths[i].pos[0])<100) && (Math.abs(positionY-megaliths[i].pos[1])<100)){
             return;
         }
-        
+    }
+    //проверка на спавн мегалита на игроке
+    if(Math.abs(canvas.height/2-positionY)<50 && (Math.abs(50-positionX)<50)){
+        return;
     }
 
     return megaliths.push({
@@ -126,19 +131,20 @@ function CreateManna(){
 function AddMana(){
     var positionX = RandomFromInterval(70,470);
     var positionY = RandomFromInterval(70,410);
+    for (var i = 0;i<megaliths.length;i++){
+        if(Math.abs(positionX-megaliths[i].pos[0])<60 && Math.abs(positionY-megaliths[i].pos[1])<60){
+            return;
+        }
+    } 
 
     for (var i = 0;i<manna.length;i++){
-        if(boxCollides([positionX,positionY],[55,45],manna[i].pos,manna[i].sprite.size)){
+        if(Math.abs(positionX-manna[i].pos[0])<60 && Math.abs(positionY-manna[i].pos[1])<60){
             return;
         }
-        
+          
     }
-    for (var i = 0;i<megaliths.length;i++){
-        if(boxCollides([positionX,positionY],[55,50],megaliths[i].pos,megaliths[i].sprite.size)){
-            return;
-        }
-        
-    }
+    
+    
     
     return manna.push({
         pos:[positionX,positionY],
@@ -221,8 +227,7 @@ function PlayerNearMegalith()
     return false;
 }
 //если столкновение произошло и дальнейшее движение невозможно, то выход из функции
-//изменено, работает корректно
-
+//измененил логику поведения игрока перед мегалитами
 function handleInput(dt) {
     if(input.isDown('DOWN') || input.isDown('s')) {
         player.dir = 'down';
@@ -456,6 +461,7 @@ function checkPlayerBounds() {
 
 }
 //обход мегалитов кораблями
+//сделал обтекание по 2 сторонам (сверху и снизу от мегалита)
 function CheckEnemyBounds(dt){
     for(var i = 0;i<enemies.length;i++){
         var enemyPos = enemies[i].pos;
@@ -463,8 +469,14 @@ function CheckEnemyBounds(dt){
         for(var j = 0;j<megaliths.length;j++){
             var megalithPos = megaliths[j].pos;
             var megalithSize = megaliths[j].sprite.size;
-            if(boxCollides([enemyPos[0]-55,enemyPos[1]],enemySize,megalithPos,megalithSize)){
-                enemies[i].pos[1]-=enemySpeed * dt;
+            if(boxCollides([enemyPos[0]-30,enemyPos[1]],enemySize,megalithPos,megalithSize)){
+                if(megalithPos[1] > enemyPos[1]){
+                    enemies[i].pos[1]-=enemySpeed * dt;
+                }
+                else{
+                    enemies[i].pos[1]+=enemySpeed * dt;
+                }
+                
             } 
         }
     }
@@ -519,8 +531,9 @@ function reset() {
     megaliths=[];
     manna = [];
     mannaExplosions = [];
-    CreateManna();
     CreateMegalith();
+    CreateManna();
+    
     enemies = [];
     bullets = [];
     
