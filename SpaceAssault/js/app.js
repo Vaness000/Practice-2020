@@ -52,6 +52,7 @@ function init() {
 var player = {
     pos: [0, 0],
     sprite: new Sprite('img/sprites.png', [0, 0], [39, 39], 16, [0, 1]),
+    dir: undefined
     
 };
 
@@ -69,7 +70,7 @@ function RandomFromInterval(min,max){
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-//создание мегалитов и манны
+//создание массива мегалитов 
 function CreateMegalith(){
     do{
         AddMegalith();
@@ -98,6 +99,7 @@ function CreateMegalith(){
         
     }*/
 }
+//создание одного мегалита
 function AddMegalith(){
     var positionX = RandomFromInterval(70,470);
     var positionY = RandomFromInterval(70,410);
@@ -113,29 +115,31 @@ function AddMegalith(){
         sprite: new Sprite('img/sprites.png',[0,217],[55,50],1,[0,1],'vertical',false)
     });
 }
+//создание массива манны
 function CreateManna(){
    
     do{
         AddMana();
     }while(manna.length<mannaCount)
 }
+//создание манны
 function AddMana(){
     var positionX = RandomFromInterval(70,470);
     var positionY = RandomFromInterval(70,410);
 
-
-    for (var i = 0;i<megaliths.length;i++){
-        if(boxCollides([positionX,positionY],[55,50],megaliths[i].pos,megaliths[i].sprite.size)){
-            return;
-        }
-        
-    }
     for (var i = 0;i<manna.length;i++){
         if(boxCollides([positionX,positionY],[55,45],manna[i].pos,manna[i].sprite.size)){
             return;
         }
         
     }
+    for (var i = 0;i<megaliths.length;i++){
+        if(boxCollides([positionX,positionY],[55,50],megaliths[i].pos,megaliths[i].sprite.size)){
+            return;
+        }
+        
+    }
+    
     return manna.push({
         pos:[positionX,positionY],
         sprite: new Sprite('img/sprites.png',[0,165],[55,45],2, [0, 1]) 
@@ -145,7 +149,7 @@ function AddMana(){
 
 
 //мегалиты друг на друге?
-function CollidesMegaliths(iteration,currentX,currentY){
+/*function CollidesMegaliths(iteration,currentX,currentY){
     
     if(iteration == 0){
         return false;
@@ -153,7 +157,7 @@ function CollidesMegaliths(iteration,currentX,currentY){
         var pos = megaliths[iteration-1].pos;
         return (Math.abs(currentX-pos[0])>200 && Math.abs(currentY-pos[1])>200);
     }
-}
+}*/
 
 
 var lastFire = Date.now();
@@ -217,38 +221,47 @@ function PlayerNearMegalith()
     return false;
 }
 //если столкновение произошло и дальнейшее движение невозможно, то выход из функции
+//изменено, работает корректно
+
 function handleInput(dt) {
     if(input.isDown('DOWN') || input.isDown('s')) {
-        if(PlayerNearMegalith()!= false){
-        if ((PlayerNearMegalith().pos[1] > player.pos[1]))
-            return;
-        }
+        player.dir = 'down';
         player.pos[1] += playerSpeed * dt;
+        if(PlayerNearMegalith()!= false){
+        if ((PlayerNearMegalith().pos[1] > player.pos[1]) && player.dir == 'down')
+            player.pos[1] -= playerSpeed * dt;;
+        }
+        
     }
 
     if(input.isDown('UP') || input.isDown('w')) {
-        if(PlayerNearMegalith()!= false){
-        if ((PlayerNearMegalith().pos[1] < player.pos[1]))
-            return;
-        }
+        player.dir = 'up';
         player.pos[1] -= playerSpeed * dt;
+        if(PlayerNearMegalith()!= false){
+        if ((PlayerNearMegalith().pos[1] < player.pos[1]) && player.dir == 'up')
+            player.pos[1] += playerSpeed * dt;;
+        }
+        
     }
 
     if(input.isDown('LEFT') || input.isDown('a')) {
-
-        if(PlayerNearMegalith()!= false){
-        if ((PlayerNearMegalith().pos[0] < player.pos[0]))
-            return;
-        }
+        player.dir = 'left';
         player.pos[0] -= playerSpeed * dt;
+        if(PlayerNearMegalith()!= false){
+        if ((PlayerNearMegalith().pos[0] < player.pos[0]) && player.dir == 'left')
+            player.pos[0] += playerSpeed * dt;
+        }
+        
     }
 
     if(input.isDown('RIGHT') || input.isDown('d')) {
-        if(PlayerNearMegalith()!= false){
-        if ((PlayerNearMegalith().pos[0] > player.pos[0]))
-            return;
-        }
+        player.dir = 'right';
         player.pos[0] += playerSpeed * dt;
+        if(PlayerNearMegalith()!= false){
+        if ((PlayerNearMegalith().pos[0] > player.pos[0]) && player.dir == 'right')
+            player.pos[0] -= playerSpeed * dt;
+        }
+        
     }
 
     if(input.isDown('SPACE') &&
