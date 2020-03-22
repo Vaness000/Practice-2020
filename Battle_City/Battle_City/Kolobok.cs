@@ -17,5 +17,10 @@ namespace Battle_City
             Image = new Bitmap(@"..\..\images\kolobok.png");
             Direction = Direction.LEFT;
         }
+
+        public Bullet Shoot()
+        {
+            return new Bullet(this.PositionX, this.PositionY, this.Direction, this);
+        }
     }
 }

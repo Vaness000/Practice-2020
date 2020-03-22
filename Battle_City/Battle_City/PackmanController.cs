@@ -12,6 +12,7 @@ namespace Battle_City
     {
         Random random = new Random();
         int probability;
+        public List<Bullet> bullets = new List<Bullet>();
         public void KeyPress(KeyEventArgs e, Kolobok entity)
         {
             if(e.KeyCode.ToString() == "Left")
@@ -30,6 +31,11 @@ namespace Battle_City
             {
                 entity.Direction = Direction.DOWN;
             }
+            if (e.KeyCode.ToString() == "Space")
+            {
+                bullets.Add(entity.Shoot());
+            }
+
         }
         
         public void EntityMove(Players player)
@@ -118,6 +124,43 @@ namespace Battle_City
             }
         }
 
+        public void RotateTank(Tank tank, Tank tank1)
+        {
+
+            switch (tank.Direction)
+            {
+                case Direction.DOWN:
+                    tank.Direction = Direction.UP;
+                    break;
+                case Direction.UP:
+                    tank.Direction = Direction.DOWN;
+                    break;
+                case Direction.RIGHT:
+                    tank.Direction = Direction.LEFT;
+                    break;
+                case Direction.LEFT:
+                    tank.Direction = Direction.RIGHT;
+                    break;
+                default: break;
+            }
+            switch (tank1.Direction)
+            {
+                case Direction.DOWN:
+                    tank1.Direction = Direction.UP;
+                    break;
+                case Direction.UP:
+                    tank1.Direction = Direction.DOWN;
+                    break;
+                case Direction.RIGHT:
+                    tank1.Direction = Direction.LEFT;
+                    break;
+                case Direction.LEFT:
+                    tank1.Direction = Direction.RIGHT;
+                    break;
+                default: break;
+            }
+        }
+
         public void ImageRotate(Tank tank, Direction direction)
         {
             switch (direction)
@@ -139,6 +182,53 @@ namespace Battle_City
                     break;
             }  
         }
-      
+        public Apple NewApple(List<Apple> apples, List<Tank> tanks, Kolobok kolobok)
+        {
+            int positionX;
+            int positionY;
+            positionX = random.Next(50, 600);
+            positionY = random.Next(50, 600);
+            Apple apple = new Apple(positionX, positionY);
+            foreach (Tank tank in tanks)
+            {
+                if (CheckColisions(apple, tank))
+                {
+                    return null;
+                }
+            }
+            if (CheckColisions(apple, kolobok))
+            {
+                return null;
+            }
+            foreach (Apple apple1 in apples)
+            {
+                if (CheckColisions(apple, apple1))
+                {
+                    return null;
+                }
+            }
+            return apple;
+        }
+        public Tank NewTank(List<Tank> tanks, Kolobok kolobok,int numer)
+        {
+            int positionX;
+            int positionY;
+            positionX = random.Next(50, 600);
+            positionY = random.Next(50, 600);
+            Tank newTank = new Tank(positionX, positionY, numer);
+            foreach(Tank tank in tanks)
+            {
+                if (CheckColisions(tank, newTank))
+                {
+                    return null;
+                }
+            }
+            if (CheckColisions(newTank, kolobok))
+            {
+                return null;
+            }
+            return newTank;
+        }
+
     }
 }

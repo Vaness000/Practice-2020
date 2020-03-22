@@ -48,6 +48,7 @@
     <Compile Include="Apple.cs" />
     <Compile Include="Borders.cs" />
     <Compile Include="Bound.cs" />
+    <Compile Include="Bullet.cs" />
     <Compile Include="Direction.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Form1.cs">

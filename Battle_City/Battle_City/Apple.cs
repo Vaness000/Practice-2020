@@ -14,6 +14,8 @@ namespace Battle_City
             PositionX = posX;
             PositionY = posY;
             Image = new Bitmap(@"..\..\images\apple.png");
+            Width = 40;
+            Height = 40;
         }
     }
 }
