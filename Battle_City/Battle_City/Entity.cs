@@ -13,7 +13,7 @@ namespace Battle_City
         public int PositionY { get; set; }
         public int Width { get; protected set; }
         public int Height { get; protected set; }
-        public Image Image { get; protected set; }
+        public Image Image { get; set; }
         
 
 

@@ -14,6 +14,7 @@ namespace Battle_City
     {
         PackmanController controller = new PackmanController();
         Kolobok kolobok = new Kolobok(150, 150);
+        
         List<Bound> bounds = new List<Bound>
         {
             new Bound(0,0,700,10),
@@ -21,26 +22,104 @@ namespace Battle_City
             new Bound(0,690,700,10),
             new Bound(690,0,10,700)
         };
-        public Form1()
+        static Random rnd = new Random();
+        List<Tank> tanks = new List<Tank>();
+        int tankCount;
+        public Form1(int tankCount)
         {
             InitializeComponent();
-            KeyPreview = true;
             this.KeyDown += new KeyEventHandler(OnKeyPress);
+            this.tankCount = tankCount;
             Invalidate();
         }
         public void OnKeyPress(object sender, KeyEventArgs e)
         {
             controller.KeyPress(e, kolobok);
         }
-       
+        private EventHandler Handler()
+        {
+            return new EventHandler(Update);
+        }
+        private EventHandler TankHandler()
+        {
+            return new EventHandler(RotateTanks);
+        }
+        public void RotateTanks(object sender, EventArgs e)
+        {
+            foreach (Tank tank in tanks)
+            {
+                controller.RotateTank(tank);
+            }
+        }
 
         private void startButton_Click(object sender, EventArgs e)
         {
+            NewGame();
+        }
+        public bool IsGameOver()
+        {
+            foreach(Tank tank in tanks)
+            {
+                if(controller.CheckColisions(tank, kolobok))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        public void GameOver()
+        {
+            timer1.Stop();
+            startButton.Enabled = true;
+            KeyPreview = false;
+            timer1.Enabled = false;
+            timer1.Tick -= Handler();
+        }
+        private void NewGame()
+        {
+            CreateTanks();
+            KeyPreview = true;
             startButton.Enabled = false;
+            
             timer1.Interval = 8;
-            timer1.Tick += new EventHandler(Update);
+            timer1.Tick += Handler();
             timer1.Enabled = true;
             timer1.Start();
+
+            timer2.Interval = 500;
+            timer2.Tick += TankHandler();
+            timer2.Enabled = true;
+            timer2.Start();
+        }
+
+        private void CreateTanks()
+        {
+            int positionX = 0;
+            int positionY = 0;
+            tanks.Clear();
+            for (int i = 0; i < tankCount; i++)
+            {
+                positionX = rnd.Next(50, 600);
+                positionY = rnd.Next(50, 600);
+                tanks.Add(new Tank(positionX, positionY, i));
+                if (i == 0)
+                {
+                    continue;
+                }
+                else
+                {
+                    if (controller.CheckColisions(tanks[tanks.Count - 1], tanks[tanks.Count - 2]))
+                    {
+                        tanks.RemoveAt(tanks.Count - 1);
+                        i--;
+                    }
+                }
+                if (controller.CheckColisions(tanks[i], kolobok))
+                {
+                    tanks.RemoveAt(i);
+                    i--;
+                }
+            }
         }
 
         private void Update(object sender, EventArgs e)
@@ -50,8 +129,34 @@ namespace Battle_City
             {
                 if (controller.CheckColisions(kolobok, bound))
                 {
-                    controller.ChangeDirection(kolobok.Direction, kolobok);
+                    controller.StopNearBorders(kolobok.Direction, kolobok);
                 }
+            }
+            foreach(Tank tank in tanks)
+            {
+                controller.EntityMove(tank);
+                foreach (Bound bound in bounds)
+                {
+                    if (controller.CheckColisions(tank, bound))
+                    {
+                        controller.StopNearBorders(tank.Direction, tank);
+                        controller.RotateTank(tank);
+                    }
+                }
+                foreach (Tank tank1 in tanks)
+                {
+                    if (controller.CheckColisions(tank, tank1))
+                    {
+                        if (!tank.Equals(tank1)) { 
+                            controller.StopNearBorders(tank1.Direction, tank1);
+                            controller.RotateTank(tank1);
+                        }
+                    }
+                }
+            }
+            if (IsGameOver())
+            {
+                GameOver();
             }
             Invalidate();
 
@@ -64,6 +169,10 @@ namespace Battle_City
             foreach(Bound bound in bounds)
             {
                 graphics.DrawImage(bound.Image, bound.PositionX, bound.PositionY, bound.Width,bound.Height);
+            }
+            foreach(Tank tank in tanks)
+            {
+                graphics.DrawImage(tank.Image, tank.PositionX, tank.PositionY, tank.Width, tank.Height);
             }
         }
 

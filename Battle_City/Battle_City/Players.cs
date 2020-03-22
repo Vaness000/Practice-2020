@@ -15,6 +15,8 @@ namespace Battle_City
             PositionX = posX;
             PositionY = posY;
             Speed = 2;
+            Width = 40;
+            Height = 40;
         }
     }
 }
