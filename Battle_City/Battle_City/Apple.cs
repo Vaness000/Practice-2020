@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Battle_City
 {
-    class Apple : Entity
+    public class Apple : Entity
     {
         public Apple(int posX, int posY) : base(posX, posY)
         {
@@ -16,6 +16,10 @@ namespace Battle_City
             Image = new Bitmap(@"..\..\images\apple.png");
             Width = 40;
             Height = 40;
+        }
+        public override string ToString()
+        {
+            return "Apple";
         }
     }
 }

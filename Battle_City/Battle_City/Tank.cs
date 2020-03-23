@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Battle_City
 {
-     class Tank : Players
+     public class Tank : Players
     {
         public int numer;
         int probability;
@@ -50,6 +50,10 @@ namespace Battle_City
                 return false;
             }
             return tank.numer == this.numer;
+        }
+        public override string ToString()
+        {
+            return "Tank" + numer.ToString();
         }
     }
 }

@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Battle_City
@@ -14,7 +11,8 @@ namespace Battle_City
     {
         PackmanController controller = new PackmanController();
         Kolobok kolobok = new Kolobok(150, 150);
-        List<Apple> apples= new List<Apple>();
+        List<Apple> apples = new List<Apple>();
+        Form2 infoForm;
         List<Bound> bounds = new List<Bound>
         {
             new Bound(0,0,700,10),
@@ -22,7 +20,6 @@ namespace Battle_City
             new Bound(0,690,700,10),
             new Bound(690,0,10,700)
         };
-        static Random rnd = new Random();
         List<Tank> tanks = new List<Tank>();
         int tankCount;
         int appleCount;
@@ -33,16 +30,16 @@ namespace Battle_City
         public Form1(int tankCount, int appleCount)
         {
             InitializeComponent();
-            this.KeyDown+= new KeyEventHandler(OnKeyPress1);
+            this.KeyDown += new KeyEventHandler(OnKeyPress1);
             this.tankCount = tankCount;
             this.appleCount = appleCount;
             Invalidate();
+            
         }
 
 
         public void OnKeyPress1(object sender, KeyEventArgs e)
         {
-            
             controller.KeyPress(e, kolobok);
             e.Handled = true;
         }
@@ -79,9 +76,9 @@ namespace Battle_City
         }
         public bool IsGameOver()
         {
-            foreach(Tank tank in tanks)
+            foreach (Tank tank in tanks)
             {
-                if(controller.CheckColisions(tank, kolobok))
+                if (controller.CheckColisions(tank, kolobok))
                 {
                     return true;
                 }
@@ -94,7 +91,7 @@ namespace Battle_City
                 }
             }
             return false;
-            
+
         }
         public void GameOver()
         {
@@ -109,16 +106,22 @@ namespace Battle_City
             timer3.Stop();
             timer3.Enabled = false;
             timer3.Tick -= TankShootHandler();
+            infoForm.Dispose();
+            controller.bullets.Clear();
+            tanks.Clear();
+            apples.Clear();
+            MessageBox.Show("Game Over!");
+
 
         }
         private void NewGame()
         {
             CreateTanks();
             CreateApples();
-            controller.bullets.Clear();
+            
             KeyPreview = true;
             startButton.Enabled = false;
-            
+
             timer1.Interval = 8;
             timer1.Tick += Handler();
             timer1.Enabled = true;
@@ -133,7 +136,9 @@ namespace Battle_City
             timer3.Enabled = true;
             timer3.Tick += TankShootHandler();
             timer3.Start();
-
+            infoForm = new Form2(tanks, apples, kolobok);
+            infoForm.Show();
+            Focus();
             score = 0;
         }
 
@@ -144,7 +149,7 @@ namespace Battle_City
             while (tanks.Count < tankCount)
             {
                 num++;
-                Tank tank = controller.NewTank(tanks,kolobok,num);
+                Tank tank = controller.NewTank(tanks, kolobok, num);
                 if (tank != null)
                 {
                     tanks.Add(tank);
@@ -158,12 +163,12 @@ namespace Battle_City
 
         private void CreateApples()
         {
-            
+
             apples.Clear();
-            while(apples.Count< appleCount)
+            while (apples.Count < appleCount)
             {
-                Apple apple = controller.NewApple(apples,tanks,kolobok);
-                if(apple != null)
+                Apple apple = controller.NewApple(apples, tanks, kolobok);
+                if (apple != null)
                 {
                     apples.Add(apple);
                 }
@@ -172,9 +177,9 @@ namespace Battle_City
                     continue;
                 }
             }
-            
+
         }
-        
+
 
         private void Update(object sender, EventArgs e)
         {
@@ -190,19 +195,20 @@ namespace Battle_City
             }
             controller.EntityMove(kolobok);
 
-            foreach(Bullet bullet1 in controller.bullets)
+            foreach (Bullet bullet1 in controller.bullets)
             {
                 controller.EntityMove(bullet1);
             }
 
-            foreach(Tank tank in tanks)
+            foreach (Tank tank in tanks)
             {
-                
+
                 controller.EntityMove(tank);
             }
-            
+
             label1.Text = score.ToString();
-            
+            infoForm.UpdateDGW();
+
             if (IsGameOver())
             {
                 GameOver();
@@ -213,7 +219,6 @@ namespace Battle_City
 
         public void CheckBounds()
         {
-            bool hit = false;
             for (int i = 0; i < apples.Count; i++)
             {
                 if (controller.CheckColisions(apples[i], kolobok))
@@ -230,17 +235,17 @@ namespace Battle_City
                 {
                     controller.RemoveBullet(i);
                 }
-               
+
             }
 
-            
-            for(int i = 0; i < tanks.Count; i++)
+
+            for (int i = 0; i < tanks.Count; i++)
             {
-                for(int j = 0; j < controller.bullets.Count; j++)
+                for (int j = 0; j < controller.bullets.Count; j++)
                 {
                     try
                     {
-                        if (controller.CheckColisions(controller.bullets[j], tanks[i]) )
+                        if (controller.CheckColisions(controller.bullets[j], tanks[i]))
                         {
                             if (!controller.bullets[j].dangerous)
                             {
@@ -248,15 +253,15 @@ namespace Battle_City
                                 tanks.RemoveAt(i);
                                 controller.RemoveBullet(j);
                                 score++;
-
                             }
-                            
                         }
                     }
                     catch { continue; }
-                    
+
                 }
             }
+
+
             foreach (Tank tank in tanks)
             {
 
@@ -271,13 +276,14 @@ namespace Battle_City
                 {
                     if (controller.CheckColisions(tank, tank1))
                     {
-                        if (!tank.Equals(tank1)) { 
+                        if (!tank.Equals(tank1))
+                        {
                             controller.StopNearBorders(tank1.Direction, tank1);
-                            controller.RotateTank(tank1,tank);
+                            controller.RotateTank(tank1, tank);
                         }
                     }
                 }
-                
+
             }
 
         }
@@ -285,7 +291,7 @@ namespace Battle_City
         {
             while (tanks.Count < tankCount)
             {
-                 var newTank = controller.NewTank(tanks, kolobok, removedNum);
+                var newTank = controller.NewTank(tanks, kolobok, removedNum);
                 if (newTank != null)
                 {
                     tanks.Add(newTank);
@@ -311,22 +317,28 @@ namespace Battle_City
             }
             foreach (Bound bound in bounds)
             {
-                graphics.DrawImage(bound.Image, bound.PositionX, bound.PositionY, bound.Width,bound.Height);
+                graphics.DrawImage(bound.Image, bound.PositionX, bound.PositionY, bound.Width, bound.Height);
             }
-            foreach(Tank tank in tanks)
+            foreach (Tank tank in tanks)
             {
                 graphics.DrawImage(tank.Image, tank.PositionX, tank.PositionY, tank.Width, tank.Height);
             }
-            foreach(Bullet bullet in controller.bullets)
+            foreach (Bullet bullet in controller.bullets)
             {
                 graphics.DrawImage(bullet.Image, bullet.PositionX, bullet.PositionY, bullet.Width, bullet.Height);
             }
-            
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             this.Height = 750;
+        }
+
+        private void infoButton_Click(object sender, EventArgs e)
+        {
+            infoForm.Show();
+
         }
     }
 }

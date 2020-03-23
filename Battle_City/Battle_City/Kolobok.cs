@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Battle_City
 {
-    class Kolobok : Players
+    public class Kolobok : Players
     {
         public Kolobok(int posX,int posY) 
             : base(posX, posY)
@@ -21,6 +21,11 @@ namespace Battle_City
         public Bullet Shoot()
         {
             return new Bullet(this.PositionX, this.PositionY, this.Direction, this);
+        }
+        public override string ToString()
+        {
+            return "Kolobok";
+            
         }
     }
 }

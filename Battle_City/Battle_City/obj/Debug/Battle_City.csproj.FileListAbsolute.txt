@@ -7,3 +7,4 @@ C:\Users\rayzh\Documents\GitHub\Practice-2020\Battle_City\Battle_City\obj\Debug\
 C:\Users\rayzh\Documents\GitHub\Practice-2020\Battle_City\Battle_City\obj\Debug\Battle_City.csproj.GenerateResource.cache
 C:\Users\rayzh\Documents\GitHub\Practice-2020\Battle_City\Battle_City\obj\Debug\Battle_City.exe
 C:\Users\rayzh\Documents\GitHub\Practice-2020\Battle_City\Battle_City\obj\Debug\Battle_City.pdb
+C:\Users\rayzh\Documents\GitHub\Practice-2020\Battle_City\Battle_City\obj\Debug\Battle_City.Form2.resources

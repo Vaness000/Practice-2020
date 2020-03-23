@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Battle_City
 {
-    class Bullet : Players
+    public class Bullet : Players
     {
         Players sender;
         public bool dangerous;
