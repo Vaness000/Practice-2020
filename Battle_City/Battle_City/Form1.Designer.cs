@@ -78,7 +78,9 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.startButton);
             this.DoubleBuffered = true;
+            this.Location = new System.Drawing.Point(100, 100);
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);

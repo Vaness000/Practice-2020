@@ -10,8 +10,13 @@ namespace Battle_City
 {
     class PackmanController
     {
+        public PackmanController(int speed)
+        {
+            this.speed = speed;
+        }
         Random random = new Random();
         int probability;
+        int speed;
         public List<Bullet> bullets = new List<Bullet>();
         public void RemoveBullet(int index)
         {
@@ -225,7 +230,7 @@ namespace Battle_City
             int positionY;
             positionX = random.Next(50, 600);
             positionY = random.Next(50, 600);
-            Tank newTank = new Tank(positionX, positionY, numer);
+            Tank newTank = new Tank(positionX, positionY, numer,speed);
             foreach(Tank tank in tanks)
             {
                 if (CheckColisions(tank, newTank))

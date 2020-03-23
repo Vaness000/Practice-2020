@@ -11,11 +11,11 @@ namespace Battle_City
     {
         Players sender;
         public bool dangerous;
-        public Bullet(int posX, int posY,Direction direction, Players player) : base(posX, posY)
+        public Bullet(int posX, int posY,Direction direction, Players player,int speed) : base(posX, posY,speed)
         {
             PositionX = posX + player.Width / 2;
             PositionY = posY + player.Height / 2;
-            Speed = 7;
+            Speed = speed*4;
             Direction = direction;
             Width = 10;
             Height = 10;

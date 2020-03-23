@@ -10,11 +10,11 @@ namespace Battle_City
     {
         public Direction Direction { get; set; }
         public int Speed { get; protected set; }
-        public Players(int posX, int posY) : base(posX, posY)
+        public Players(int posX, int posY,int speed) : base(posX, posY)
         {
             PositionX = posX;
             PositionY = posY;
-            Speed = 2;
+            Speed = speed;
             Width = 40;
             Height = 40;
         }

@@ -9,30 +9,39 @@ namespace Battle_City
 {
     public partial class Form1 : Form
     {
-        PackmanController controller = new PackmanController();
-        Kolobok kolobok = new Kolobok(150, 150);
+        PackmanController controller;
+        
         List<Apple> apples = new List<Apple>();
         Form2 infoForm;
-        List<Bound> bounds = new List<Bound>
-        {
-            new Bound(0,0,700,10),
-            new Bound(0,0,10,700),
-            new Bound(0,690,700,10),
-            new Bound(690,0,10,700)
-        };
+        int width;
+        int height;
+        int speed;
+        List<Bound> bounds;
         List<Tank> tanks = new List<Tank>();
         int tankCount;
         int appleCount;
         int score;
         int removedNum;
+        Kolobok kolobok;
 
-
-        public Form1(int tankCount, int appleCount)
+        public Form1(int tankCount, int appleCount,int width, int height, int speed)
         {
             InitializeComponent();
             this.KeyDown += new KeyEventHandler(OnKeyPress1);
             this.tankCount = tankCount;
             this.appleCount = appleCount;
+            this.width = width;
+            this.height = height;
+            this.speed = speed;
+            bounds = new List<Bound>
+            {
+            new Bound(0,0,width,10),
+            new Bound(0,0,10,height),
+            new Bound(0,height-10,width,10),
+            new Bound(width-10,0,10,height)
+            };
+            kolobok = new Kolobok(150, 150, speed);
+            controller = new PackmanController(speed);
             Invalidate();
             
         }
@@ -111,6 +120,7 @@ namespace Battle_City
             tanks.Clear();
             apples.Clear();
             MessageBox.Show("Game Over!");
+            label1.Text = "0";
 
 
         }

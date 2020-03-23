@@ -12,12 +12,12 @@ namespace Battle_City
         public int numer;
         int probability;
         Random rnd = new Random();
-        public Tank(int posX, int posY, int num) : base(posX, posY)
+        public Tank(int posX, int posY, int num, int speed) : base(posX, posY,speed)
         {
             PositionX = posX;
             PositionY = posY;
             numer = num;
-            //Speed = 0;
+            Speed = speed;
             Image = new Bitmap(@"..\..\images\tank.jpg");
             Direction = SetDirection();
         }
@@ -35,7 +35,7 @@ namespace Battle_City
         }
         public Bullet Shoot()
         {
-            return new Bullet(this.PositionX, this.PositionY, this.Direction, this);
+            return new Bullet(this.PositionX, this.PositionY, this.Direction, this,Speed);
         }
 
         public override bool Equals(object o)
