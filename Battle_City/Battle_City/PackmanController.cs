@@ -197,7 +197,7 @@ namespace Battle_City
                     break;
             }  
         }
-        public Apple NewApple(List<Apple> apples, List<Tank> tanks, Kolobok kolobok)
+        public Apple NewApple(List<Apple> apples, List<Tank> tanks, Kolobok kolobok, List<Wall> walls,List<River> rivers)
         {
             int positionX;
             int positionY;
@@ -207,6 +207,20 @@ namespace Battle_City
             foreach (Tank tank in tanks)
             {
                 if (CheckColisions(apple, tank))
+                {
+                    return null;
+                }
+            }
+            foreach(Wall wall in walls)
+            {
+                if (CheckColisions(apple, wall))
+                {
+                    return null;
+                }
+            }
+            foreach( River river in rivers)
+            {
+                if (CheckColisions(river, apple))
                 {
                     return null;
                 }
@@ -224,7 +238,7 @@ namespace Battle_City
             }
             return apple;
         }
-        public Tank NewTank(List<Tank> tanks, Kolobok kolobok,int numer)
+        public Tank NewTank(List<Tank> tanks, Kolobok kolobok,int numer, List<Wall> walls, List<River> rivers)
         {
             int positionX;
             int positionY;
@@ -234,6 +248,20 @@ namespace Battle_City
             foreach(Tank tank in tanks)
             {
                 if (CheckColisions(tank, newTank))
+                {
+                    return null;
+                }
+            }
+            foreach(Wall wall in walls)
+            {
+                if (CheckColisions(wall, newTank))
+                {
+                    return null;
+                }
+            }
+            foreach (River river in rivers)
+            {
+                if (CheckColisions(river, newTank))
                 {
                     return null;
                 }

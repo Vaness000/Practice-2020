@@ -16,7 +16,7 @@ namespace Battle_City
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1(4,6,700,700,3));
+            Application.Run(new Form1(4,4,700,700,3));
         }
     }
 }
