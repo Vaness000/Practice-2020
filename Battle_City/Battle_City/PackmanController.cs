@@ -13,6 +13,10 @@ namespace Battle_City
         Random random = new Random();
         int probability;
         public List<Bullet> bullets = new List<Bullet>();
+        public void RemoveBullet(int index)
+        {
+            bullets.RemoveAt(index);
+        }
         public void KeyPress(KeyEventArgs e, Kolobok entity)
         {
             if(e.KeyCode.ToString() == "Left")
@@ -36,6 +40,11 @@ namespace Battle_City
                 bullets.Add(entity.Shoot());
             }
 
+        }
+
+        public void TankShoot(Tank tank)
+        {
+            bullets.Add(tank.Shoot());
         }
         
         public void EntityMove(Players player)
@@ -87,22 +96,23 @@ namespace Battle_City
         {
             if(direction == Direction.LEFT)
             {
-                player.PositionX += player.Speed;
+                //player.PositionX += player.Speed;
+                player.Direction = Direction.RIGHT;
             }
             if (direction == Direction.RIGHT)
             {
-                
-                player.PositionX -= player.Speed;
+                player.Direction = Direction.LEFT;
+                //player.PositionX -= player.Speed;
             }
             if (direction == Direction.UP)
             {
-                
-                player.PositionY += player.Speed;
+                player.Direction = Direction.DOWN;
+                //player.PositionY += player.Speed;
             }
             if (direction == Direction.DOWN)
             {
-                
-                player.PositionY -= player.Speed;
+                player.Direction = Direction.UP;
+                //player.PositionY -= player.Speed;
             }
         }
 

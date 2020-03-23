@@ -27,21 +27,24 @@ namespace Battle_City
         int tankCount;
         int appleCount;
         int score;
+        int removedNum;
 
 
         public Form1(int tankCount, int appleCount)
         {
             InitializeComponent();
-            this.KeyDown += new KeyEventHandler(OnKeyPress);
+            this.KeyDown+= new KeyEventHandler(OnKeyPress1);
             this.tankCount = tankCount;
             this.appleCount = appleCount;
             Invalidate();
         }
 
 
-        public void OnKeyPress(object sender, KeyEventArgs e)
+        public void OnKeyPress1(object sender, KeyEventArgs e)
         {
+            
             controller.KeyPress(e, kolobok);
+            e.Handled = true;
         }
         private EventHandler Handler()
         {
@@ -51,11 +54,22 @@ namespace Battle_City
         {
             return new EventHandler(RotateTanks);
         }
+        private EventHandler TankShootHandler()
+        {
+            return new EventHandler(ShootTanks);
+        }
         public void RotateTanks(object sender, EventArgs e)
         {
             foreach (Tank tank in tanks)
             {
                 controller.RotateTank(tank);
+            }
+        }
+        public void ShootTanks(object sender, EventArgs e)
+        {
+            foreach (Tank tank in tanks)
+            {
+                controller.TankShoot(tank);
             }
         }
 
@@ -72,7 +86,15 @@ namespace Battle_City
                     return true;
                 }
             }
+            foreach (Bullet bullet in controller.bullets.Where(x => x.dangerous == true))
+            {
+                if (controller.CheckColisions(bullet, kolobok))
+                {
+                    return true;
+                }
+            }
             return false;
+            
         }
         public void GameOver()
         {
@@ -81,11 +103,19 @@ namespace Battle_City
             KeyPreview = false;
             timer1.Enabled = false;
             timer1.Tick -= Handler();
+            timer2.Stop();
+            timer2.Enabled = false;
+            timer2.Tick -= TankHandler();
+            timer3.Stop();
+            timer3.Enabled = false;
+            timer3.Tick -= TankShootHandler();
+
         }
         private void NewGame()
         {
             CreateTanks();
             CreateApples();
+            controller.bullets.Clear();
             KeyPreview = true;
             startButton.Enabled = false;
             
@@ -98,6 +128,11 @@ namespace Battle_City
             timer2.Tick += TankHandler();
             timer2.Enabled = true;
             timer2.Start();
+
+            timer3.Interval = 1500;
+            timer3.Enabled = true;
+            timer3.Tick += TankShootHandler();
+            timer3.Start();
 
             score = 0;
         }
@@ -117,7 +152,6 @@ namespace Battle_City
                 else
                 {
                     continue;
-                    num--;
                 }
             }
         }
@@ -144,7 +178,9 @@ namespace Battle_City
 
         private void Update(object sender, EventArgs e)
         {
-            
+
+            CheckBounds();
+            Recovery();
             foreach (Bound bound in bounds)
             {
                 if (controller.CheckColisions(kolobok, bound))
@@ -153,35 +189,7 @@ namespace Battle_City
                 }
             }
             controller.EntityMove(kolobok);
-            Bullet removedBullet = null;
-            Tank removedTank = null;
-            foreach (Bullet bullet in controller.bullets)
-            {
-                foreach(Bound bound in bounds)
-                {
-                    if (controller.CheckColisions(bullet, bound))
-                    {
-                        removedBullet = bullet;
-                    }
-                }
-                foreach(Tank tank in tanks)
-                {
-                    if (controller.CheckColisions(tank, bullet))
-                    {
-                        removedBullet = bullet;
-                        removedTank = tank;
-                    }
-                }
-            }
-            if (removedBullet != null)
-            {
-                controller.bullets.Remove(removedBullet);
-            }
-            if (removedTank != null)
-            {
-                tanks.Remove(removedTank);
-            }
-            
+
             foreach(Bullet bullet1 in controller.bullets)
             {
                 controller.EntityMove(bullet1);
@@ -190,12 +198,73 @@ namespace Battle_City
             foreach(Tank tank in tanks)
             {
                 
+                controller.EntityMove(tank);
+            }
+            
+            label1.Text = score.ToString();
+            
+            if (IsGameOver())
+            {
+                GameOver();
+            }
+            Invalidate();
+
+        }
+
+        public void CheckBounds()
+        {
+            bool hit = false;
+            for (int i = 0; i < apples.Count; i++)
+            {
+                if (controller.CheckColisions(apples[i], kolobok))
+                {
+                    score++;
+                    apples.RemoveAt(i);
+                }
+            }
+            for (int i = 0; i < controller.bullets.Count; i++)
+            {
+                int bullX = controller.bullets[i].PositionX;
+                int bullY = controller.bullets[i].PositionY;
+                if (bullX < 10 || bullX > 670 || bullY < 10 || bullY > 670)
+                {
+                    controller.RemoveBullet(i);
+                }
+               
+            }
+
+            
+            for(int i = 0; i < tanks.Count; i++)
+            {
+                for(int j = 0; j < controller.bullets.Count; j++)
+                {
+                    try
+                    {
+                        if (controller.CheckColisions(controller.bullets[j], tanks[i]) )
+                        {
+                            if (!controller.bullets[j].dangerous)
+                            {
+                                removedNum = tanks[i].numer;
+                                tanks.RemoveAt(i);
+                                controller.RemoveBullet(j);
+                                score++;
+
+                            }
+                            
+                        }
+                    }
+                    catch { continue; }
+                    
+                }
+            }
+            foreach (Tank tank in tanks)
+            {
+
                 foreach (Bound bound in bounds)
                 {
                     if (controller.CheckColisions(tank, bound))
                     {
                         controller.StopNearBorders(tank.Direction, tank);
-                        controller.RotateTank(tank);
                     }
                 }
                 foreach (Tank tank1 in tanks)
@@ -208,39 +277,28 @@ namespace Battle_City
                         }
                     }
                 }
-                controller.EntityMove(tank);
+                
             }
-            Apple removedApple = null;
-            foreach (Apple apple1 in apples)
+
+        }
+        public void Recovery()
+        {
+            while (tanks.Count < tankCount)
             {
-                if (controller.CheckColisions(apple1, kolobok))
+                 var newTank = controller.NewTank(tanks, kolobok, removedNum);
+                if (newTank != null)
                 {
-                    score++;
-                    removedApple = apple1;
+                    tanks.Add(newTank);
                 }
             }
-            if(removedApple != null)
+            while (apples.Count < appleCount)
             {
-                apples.Remove(removedApple);
-                while (apples.Count < appleCount)
+                var newApple = controller.NewApple(apples, tanks, kolobok);
+                if (newApple != null)
                 {
-                    var newApple = controller.NewApple(apples, tanks, kolobok);
-                    if (newApple != null)
-                    {
-                        apples.Add(newApple);
-                    }
+                    apples.Add(newApple);
                 }
-
             }
-            
-            label1.Text = score.ToString();
-            
-            if (IsGameOver())
-            {
-                GameOver();
-            }
-            Invalidate();
-
         }
 
         private void Form1_Paint(object sender, PaintEventArgs e)

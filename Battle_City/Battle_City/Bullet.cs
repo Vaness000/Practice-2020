@@ -15,7 +15,7 @@ namespace Battle_City
         {
             PositionX = posX + player.Width / 2;
             PositionY = posY + player.Height / 2;
-            Speed = 10;
+            Speed = 7;
             Direction = direction;
             Width = 10;
             Height = 10;

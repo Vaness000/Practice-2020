@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Battle_City
 {
-    public class Tank : Players
+     class Tank : Players
     {
         public int numer;
         int probability;
@@ -17,6 +17,7 @@ namespace Battle_City
             PositionX = posX;
             PositionY = posY;
             numer = num;
+            //Speed = 0;
             Image = new Bitmap(@"..\..\images\tank.jpg");
             Direction = SetDirection();
         }
@@ -31,6 +32,10 @@ namespace Battle_City
                 case 4:return Direction.LEFT;
                 default: return Direction.STOP;
             }
+        }
+        public Bullet Shoot()
+        {
+            return new Bullet(this.PositionX, this.PositionY, this.Direction, this);
         }
 
         public override bool Equals(object o)
