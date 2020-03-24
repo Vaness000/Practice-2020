@@ -1,6 +1,6 @@
 ﻿namespace Battle_City
 {
-    partial class Form1
+    partial class Battle_City
     {
         /// <summary>
         /// Обязательная переменная конструктора.
@@ -35,6 +35,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.timer3 = new System.Windows.Forms.Timer(this.components);
             this.label2 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // startButton
@@ -69,21 +71,35 @@
             this.label2.TabIndex = 3;
             this.label2.Text = "Score:";
             // 
-            // Form1
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(0, -1);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(727, 714);
+            this.pictureBox1.TabIndex = 4;
+            this.pictureBox1.TabStop = false;
+            this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
+            // 
+            // Battle_City
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(889, 651);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.startButton);
             this.DoubleBuffered = true;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Location = new System.Drawing.Point(100, 100);
-            this.Name = "Form1";
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "Battle_City";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Form1";
+            this.Text = "Battle City";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Battle_City_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.Paint += new System.Windows.Forms.PaintEventHandler(this.Form1_Paint);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -96,6 +112,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Timer timer3;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 

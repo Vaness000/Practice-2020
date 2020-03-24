@@ -7,13 +7,15 @@ using System.Windows.Forms;
 
 namespace Battle_City
 {
-    public partial class Form1 : Form
+    public partial class Battle_City : Form
     {
         PackmanController controller;
+        Random rnd = new Random();
         List<Wall> walls = new List<Wall>();
         List<Apple> apples = new List<Apple>();
         List<River> rivers = new List<River>();
-        Form2 infoForm;
+        List<Entity> entities = new List<Entity>();
+        InformationForm infoForm;
         int width;
         int height;
         int speed;
@@ -25,7 +27,7 @@ namespace Battle_City
         int removedNum;
         Kolobok kolobok;
 
-        public Form1(int tankCount, int appleCount,int width, int height, int speed)
+        public Battle_City(int tankCount, int appleCount,int width, int height, int speed)
         {
             InitializeComponent();
             this.KeyDown += new KeyEventHandler(OnKeyPress1);
@@ -69,7 +71,7 @@ namespace Battle_City
         {
             foreach (Tank tank in tanks)
             {
-                controller.RotateTank(tank);
+                tank.RotateTank(rnd.Next(1,5));
             }
         }
         public void ShootTanks(object sender, EventArgs e)
@@ -122,7 +124,8 @@ namespace Battle_City
             apples.Clear();
             walls.Clear();
             rivers.Clear();
-            MessageBox.Show("Game Over!");
+            entities.Clear();
+            MessageBox.Show("Game Over!" + "\n" + "You score: " + score);
             label1.Text = "0";
 
 
@@ -136,11 +139,14 @@ namespace Battle_City
             CreateWalls();
             CreateTanks();
             CreateApples();
+            entities.Add(kolobok);
+            entities.AddRange(tanks);
+            entities.AddRange(apples);
             
             KeyPreview = true;
             startButton.Enabled = false;
 
-            timer1.Interval = 8;
+            timer1.Interval = 1;
             timer1.Tick += Handler();
             timer1.Enabled = true;
             timer1.Start();
@@ -154,7 +160,7 @@ namespace Battle_City
             timer3.Enabled = true;
             timer3.Tick += TankShootHandler();
             timer3.Start();
-            infoForm = new Form2(tanks, apples, kolobok);
+            infoForm = new InformationForm(entities.Count);
             infoForm.Show();
             Focus();
             score = 0;
@@ -214,32 +220,34 @@ namespace Battle_City
 
         private void Update(object sender, EventArgs e)
         {
-
+            
             CheckBounds();
             Recovery();
-            
-            controller.EntityMove(kolobok);
+            kolobok.Move();
 
             foreach (Bullet bullet1 in controller.bullets)
-            {
-                controller.EntityMove(bullet1);
+            { 
+                bullet1.Move();
             }
 
             foreach (Tank tank in tanks)
             {
-
-                controller.EntityMove(tank);
+                tank.Move();
             }
 
             label1.Text = score.ToString();
-            infoForm.UpdateDGW();
-
+            
+            for( int i = 0; i < entities.Count; i++)
+            {
+                infoForm.UpdateDGW(entities[i].ToString(),entities[i].PositionX,entities[i].PositionY,i);
+            }
             if (IsGameOver())
             {
                 GameOver();
             }
-            Invalidate();
-
+            pictureBox1.Invalidate();
+           
+            
         }
 
         public void CheckBounds()
@@ -248,7 +256,8 @@ namespace Battle_City
             {
                 if (controller.CheckColisions(kolobok, bound))
                 {
-                    controller.StopNearBorders(kolobok.Direction, kolobok);
+                    
+                    kolobok.StopNearBorders();
                 }
             }
             for (int i = 0; i < apples.Count; i++)
@@ -315,14 +324,16 @@ namespace Battle_City
             {
                 if (controller.CheckColisions(kolobok, wall1))
                 {
-                    controller.StopNearBorders(kolobok.Direction, kolobok);
+                    
+                    kolobok.StopNearBorders();
                 }
             }
             foreach(River river1 in rivers)
             {
                 if (controller.CheckColisions(kolobok, river1))
                 {
-                    controller.StopNearBorders(kolobok.Direction, kolobok);
+                    
+                    kolobok.StopNearBorders();
                 }
             }
 
@@ -333,21 +344,24 @@ namespace Battle_City
                 {
                     if (controller.CheckColisions(tank, bound))
                     {
-                        controller.StopNearBorders(tank.Direction, tank);
+                       
+                        tank.StopNearBorders();
                     }
                 }
                 foreach(Wall wall in walls)
                 {
                     if (controller.CheckColisions(tank, wall))
                     {
-                        controller.StopNearBorders(tank.Direction, tank);
+                        
+                        tank.StopNearBorders();
                     }
                 }
                 foreach(River river in rivers)
                 {
                     if (controller.CheckColisions(tank, river))
                     {
-                        controller.StopNearBorders(tank.Direction, tank);
+                        
+                        tank.StopNearBorders();
                     }
                 }
                 foreach (Tank tank1 in tanks)
@@ -356,8 +370,9 @@ namespace Battle_City
                     {
                         if (!tank.Equals(tank1))
                         {
-                            controller.StopNearBorders(tank1.Direction, tank1);
-                            controller.RotateTank(tank1, tank);
+                            tank1.StopNearBorders();
+                            tank.StopNearBorders();
+
                         }
                     }
                 }
@@ -427,5 +442,15 @@ namespace Battle_City
             infoForm.Show();
 
         }
+
+        private void Battle_City_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (infoForm != null)
+            {
+                infoForm.Dispose();
+            }
+        }
+
+        
     }
 }

@@ -10,7 +10,7 @@ namespace Battle_City
      public class Tank : Players
     {
         public int numer;
-        int probability;
+        
         Random rnd = new Random();
         public Tank(int posX, int posY, int num, int speed) : base(posX, posY,speed)
         {
@@ -19,12 +19,10 @@ namespace Battle_City
             numer = num;
             Speed = speed;
             Image = new Bitmap(@"..\..\images\tank.jpg");
-            Direction = SetDirection();
+            Direction = SetDirection(rnd.Next(1, 4));
         }
-        public Direction SetDirection()
+        public Direction SetDirection(int probability)
         {
-            
-            probability = rnd.Next(1, 4);
             switch (probability) {
                 case 1: return Direction.DOWN;               
                 case 2: return Direction.UP;
@@ -54,6 +52,26 @@ namespace Battle_City
         public override string ToString()
         {
             return "Tank" + numer.ToString();
+        }
+        public void RotateTank(int probability)
+        {
+            
+            switch (probability)
+            {
+                case 1:
+                    this.Direction = Direction.UP;
+                    break;
+                case 2:
+                    this.Direction = Direction.DOWN;
+                    break;
+                case 3:
+                    this.Direction = Direction.LEFT;
+                    break;
+                case 4:
+                    this.Direction = Direction.RIGHT;
+                    break;
+                default: break;
+            }
         }
     }
 }

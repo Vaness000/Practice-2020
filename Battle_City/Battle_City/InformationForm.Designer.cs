@@ -1,6 +1,6 @@
 ﻿namespace Battle_City
 {
-    partial class Form2
+    partial class InformationForm
     {
         /// <summary>
         /// Required designer variable.
@@ -44,7 +44,7 @@
             this.Y});
             this.dataGridView1.Location = new System.Drawing.Point(13, 13);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(346, 425);
+            this.dataGridView1.Size = new System.Drawing.Size(346, 244);
             this.dataGridView1.TabIndex = 0;
             // 
             // Object
@@ -62,16 +62,22 @@
             this.Y.HeaderText = "Y";
             this.Y.Name = "Y";
             // 
-            // Form2
+            // InformationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(371, 450);
+            this.ClientSize = new System.Drawing.Size(371, 266);
+            this.ControlBox = false;
             this.Controls.Add(this.dataGridView1);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Location = new System.Drawing.Point(1000, 100);
-            this.Name = "Form2";
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "InformationForm";
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Form2";
+            this.Text = "Information";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.InformationForm_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 

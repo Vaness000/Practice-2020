@@ -51,17 +51,17 @@
     <Compile Include="Bullet.cs" />
     <Compile Include="Direction.cs" />
     <Compile Include="Entity.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="Battle_City.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Battle_City.Designer.cs">
+      <DependentUpon>Battle_City.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form2.cs">
+    <Compile Include="InformationForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form2.Designer.cs">
-      <DependentUpon>Form2.cs</DependentUpon>
+    <Compile Include="InformationForm.Designer.cs">
+      <DependentUpon>InformationForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Kolobok.cs" />
     <Compile Include="PackmanController.cs" />
@@ -71,11 +71,11 @@
     <Compile Include="River.cs" />
     <Compile Include="Tank.cs" />
     <Compile Include="Wall.cs" />
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="Battle_City.resx">
+      <DependentUpon>Battle_City.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form2.resx">
-      <DependentUpon>Form2.cs</DependentUpon>
+    <EmbeddedResource Include="InformationForm.resx">
+      <DependentUpon>InformationForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
