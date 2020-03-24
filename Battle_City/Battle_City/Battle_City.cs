@@ -11,21 +11,17 @@ namespace Battle_City
     {
         PackmanController controller;
         Random rnd = new Random();
-        List<Wall> walls = new List<Wall>();
-        List<Apple> apples = new List<Apple>();
-        List<River> rivers = new List<River>();
         List<Entity> entities = new List<Entity>();
         InformationForm infoForm;
+        Game game;
         int width;
         int height;
         int speed;
-        List<Bound> bounds;
-        List<Tank> tanks = new List<Tank>();
+        
         int tankCount;
         int appleCount;
         int score;
         int removedNum;
-        Kolobok kolobok;
 
         public Battle_City(int tankCount, int appleCount,int width, int height, int speed)
         {
@@ -35,15 +31,9 @@ namespace Battle_City
             this.appleCount = appleCount;
             this.width = width;
             this.height = height;
+            this.game = new Game(width, height,speed);
             this.speed = speed;
-            bounds = new List<Bound>
-            {
-            new Bound(0,0,width,10),
-            new Bound(0,0,10,height),
-            new Bound(0,height-10,width,10),
-            new Bound(width-10,0,10,height)
-            };
-            kolobok = new Kolobok(150, 150, speed);
+            
             controller = new PackmanController(speed);
             Invalidate();
             
@@ -52,7 +42,7 @@ namespace Battle_City
 
         public void OnKeyPress1(object sender, KeyEventArgs e)
         {
-            controller.KeyPress(e, kolobok);
+            controller.KeyPress(e, game.kolobok);
             e.Handled = true;
         }
         private EventHandler Handler()
@@ -69,14 +59,23 @@ namespace Battle_City
         }
         public void RotateTanks(object sender, EventArgs e)
         {
-            foreach (Tank tank in tanks)
+            foreach (Tank tank in game.tanks)
             {
                 tank.RotateTank(rnd.Next(1,5));
             }
         }
+        public void ExplosionsClear(object sender, EventArgs e)
+        {
+            game.explosions.Clear();
+        }
+        private EventHandler ClearExplosion()
+        {
+            return new EventHandler(ExplosionsClear);
+        }
+
         public void ShootTanks(object sender, EventArgs e)
         {
-            foreach (Tank tank in tanks)
+            foreach (Tank tank in game.tanks)
             {
                 controller.TankShoot(tank);
             }
@@ -88,16 +87,16 @@ namespace Battle_City
         }
         public bool IsGameOver()
         {
-            foreach (Tank tank in tanks)
+            foreach (Tank tank in game.tanks)
             {
-                if (controller.CheckColisions(tank, kolobok))
+                if (controller.CheckColisions(tank, game.kolobok))
                 {
                     return true;
                 }
             }
             foreach (Bullet bullet in controller.bullets.Where(x => x.dangerous == true))
             {
-                if (controller.CheckColisions(bullet, kolobok))
+                if (controller.CheckColisions(bullet, game.kolobok))
                 {
                     return true;
                 }
@@ -115,15 +114,17 @@ namespace Battle_City
             timer2.Stop();
             timer2.Enabled = false;
             timer2.Tick -= TankHandler();
+            timer2.Tick -= ClearExplosion();
             timer3.Stop();
             timer3.Enabled = false;
             timer3.Tick -= TankShootHandler();
             infoForm.Dispose();
             controller.bullets.Clear();
-            tanks.Clear();
-            apples.Clear();
-            walls.Clear();
-            rivers.Clear();
+            game.tanks.Clear();
+            game.apples.Clear();
+            game.walls.Clear();
+            game.rivers.Clear();
+            game.explosions.Clear();
             entities.Clear();
             MessageBox.Show("Game Over!" + "\n" + "You score: " + score);
             label1.Text = "0";
@@ -132,16 +133,16 @@ namespace Battle_City
         }
         private void NewGame()
         {
-            kolobok.PositionX = 150;
-            kolobok.PositionX = 150;
+            game.kolobok.PositionX = 150;
+            game.kolobok.PositionX = 150;
 
-            CreateRiver();
-            CreateWalls();
+            game.CreateRiver();
+            game.CreateWalls();
             CreateTanks();
             CreateApples();
-            entities.Add(kolobok);
-            entities.AddRange(tanks);
-            entities.AddRange(apples);
+            entities.Add(game.kolobok);
+            entities.AddRange(game.tanks);
+            entities.AddRange(game.apples);
             
             KeyPreview = true;
             startButton.Enabled = false;
@@ -153,6 +154,7 @@ namespace Battle_City
 
             timer2.Interval = 1000;
             timer2.Tick += TankHandler();
+            timer2.Tick += ClearExplosion();
             timer2.Enabled = true;
             timer2.Start();
 
@@ -169,14 +171,14 @@ namespace Battle_City
         private void CreateTanks()
         {
             int num = 0;
-            tanks.Clear();
-            while (tanks.Count < tankCount)
+            game.tanks.Clear();
+            while (game.tanks.Count < tankCount)
             {
                 num++;
-                Tank tank = controller.NewTank(tanks, kolobok, num,walls,rivers);
+                Tank tank = controller.NewTank(game.tanks, game.kolobok, num, game.walls, game.rivers);
                 if (tank != null)
                 {
-                    tanks.Add(tank);
+                    game.tanks.Add(tank);
                 }
                 else
                 {
@@ -184,30 +186,16 @@ namespace Battle_City
                 }
             }
         }
-        private void CreateWalls()
-        {
-            walls.Add(new Wall(210, 300));
-            walls.Add(new Wall(260, 300));
-            walls.Add(new Wall(310, 100));
-            walls.Add(new Wall(310, 150));
-            walls.Add(new Wall(310, 200));
-        }
-        private void CreateRiver()
-        {
-            rivers.Add(new River(200, 50));
-            rivers.Add(new River(400, 400));
-        }
-
         private void CreateApples()
         {
 
-            apples.Clear();
-            while (apples.Count < appleCount)
+            game.apples.Clear();
+            while (game.apples.Count < appleCount)
             {
-                Apple apple = controller.NewApple(apples, tanks, kolobok,walls,rivers);
+                Apple apple = controller.NewApple(game.apples, game.tanks, game.kolobok, game.walls, game.rivers);
                 if (apple != null)
                 {
-                    apples.Add(apple);
+                    game.apples.Add(apple);
                 }
                 else
                 {
@@ -223,14 +211,14 @@ namespace Battle_City
             
             CheckBounds();
             Recovery();
-            kolobok.Move();
+            game.kolobok.Move();
 
             foreach (Bullet bullet1 in controller.bullets)
             { 
                 bullet1.Move();
             }
 
-            foreach (Tank tank in tanks)
+            foreach (Tank tank in game.tanks)
             {
                 tank.Move();
             }
@@ -252,43 +240,43 @@ namespace Battle_City
 
         public void CheckBounds()
         {
-            foreach (Bound bound in bounds)
+            foreach (Bound bound in game.bounds)
             {
-                if (controller.CheckColisions(kolobok, bound))
+                if (controller.CheckColisions(game.kolobok, bound))
                 {
-                    
-                    kolobok.StopNearBorders();
+                    game.kolobok.StopNearBorders();
                 }
             }
-            for (int i = 0; i < apples.Count; i++)
+            for (int i = 0; i < game.apples.Count; i++)
             {
-                if (controller.CheckColisions(apples[i], kolobok))
+                if (controller.CheckColisions(game.apples[i], game.kolobok))
                 {
                     score++;
-                    apples.RemoveAt(i);
+                    game.apples.RemoveAt(i);
                 }
             }
             for (int i = 0; i < controller.bullets.Count; i++)
             {
                 int bullX = controller.bullets[i].PositionX;
                 int bullY = controller.bullets[i].PositionY;
-                if (bullX < 10 || bullX > 670 || bullY < 10 || bullY > 670)
+                if (bullX < 10 || bullX > width-20 || bullY < 10 || bullY > height-20)
                 {
+                    game.explosions.Add(new Explosion(controller.bullets[i].PositionX, controller.bullets[i].PositionY));
                     controller.RemoveBullet(i);
                 }
-
             }
             
             for (int i = 0; i < controller.bullets.Count; i++)
             {
                 try
                 {
-                    for (int j = 0; j < walls.Count; j++)
+                    for (int j = 0; j < game.walls.Count; j++)
                     {
-                        if (controller.CheckColisions(walls[j], controller.bullets[i]))
+                        if (controller.CheckColisions(game.walls[j], controller.bullets[i]))
                         {
+                            game.explosions.Add(new Explosion(controller.bullets[i].PositionX, controller.bullets[i].PositionY));
                             controller.RemoveBullet(i);
-                            walls.RemoveAt(j);
+                            game.walls.RemoveAt(j);
                         }
                     }
                 }
@@ -299,18 +287,19 @@ namespace Battle_City
             }
 
 
-            for (int i = 0; i < tanks.Count; i++)
+            for (int i = 0; i < game.tanks.Count; i++)
             {
                 for (int j = 0; j < controller.bullets.Count; j++)
                 {
                     try
                     {
-                        if (controller.CheckColisions(controller.bullets[j], tanks[i]))
+                        if (controller.CheckColisions(controller.bullets[j], game.tanks[i]))
                         {
                             if (!controller.bullets[j].dangerous)
                             {
-                                removedNum = tanks[i].numer;
-                                tanks.RemoveAt(i);
+                                game.explosions.Add(new Explosion(controller.bullets[j].PositionX, controller.bullets[j].PositionY));
+                                removedNum = game.tanks[i].numer;
+                                game.tanks.RemoveAt(i);
                                 controller.RemoveBullet(j);
                                 score++;
                             }
@@ -320,27 +309,27 @@ namespace Battle_City
 
                 }
             }
-            foreach(Wall wall1 in walls)
+            foreach(Wall wall1 in game.walls)
             {
-                if (controller.CheckColisions(kolobok, wall1))
+                if (controller.CheckColisions(game.kolobok, wall1))
                 {
-                    
-                    kolobok.StopNearBorders();
+
+                    game.kolobok.StopNearBorders();
                 }
             }
-            foreach(River river1 in rivers)
+            foreach(River river1 in game.rivers)
             {
-                if (controller.CheckColisions(kolobok, river1))
+                if (controller.CheckColisions(game.kolobok, river1))
                 {
-                    
-                    kolobok.StopNearBorders();
+
+                    game.kolobok.StopNearBorders();
                 }
             }
 
-            foreach (Tank tank in tanks)
+            foreach (Tank tank in game.tanks)
             {
 
-                foreach (Bound bound in bounds)
+                foreach (Bound bound in game.bounds)
                 {
                     if (controller.CheckColisions(tank, bound))
                     {
@@ -348,7 +337,7 @@ namespace Battle_City
                         tank.StopNearBorders();
                     }
                 }
-                foreach(Wall wall in walls)
+                foreach(Wall wall in game.walls)
                 {
                     if (controller.CheckColisions(tank, wall))
                     {
@@ -356,7 +345,7 @@ namespace Battle_City
                         tank.StopNearBorders();
                     }
                 }
-                foreach(River river in rivers)
+                foreach(River river in game.rivers)
                 {
                     if (controller.CheckColisions(tank, river))
                     {
@@ -364,7 +353,7 @@ namespace Battle_City
                         tank.StopNearBorders();
                     }
                 }
-                foreach (Tank tank1 in tanks)
+                foreach (Tank tank1 in game.tanks)
                 {
                     if (controller.CheckColisions(tank, tank1))
                     {
@@ -378,25 +367,23 @@ namespace Battle_City
                 }
 
             }
-            
-
         }
         public void Recovery()
         {
-            while (tanks.Count < tankCount)
+            while (game.tanks.Count < tankCount)
             {
-                var newTank = controller.NewTank(tanks, kolobok, removedNum,walls,rivers);
+                var newTank = controller.NewTank(game.tanks, game.kolobok, removedNum, game.walls, game.rivers);
                 if (newTank != null)
                 {
-                    tanks.Add(newTank);
+                    game.tanks.Add(newTank);
                 }
             }
-            while (apples.Count < appleCount)
+            while (game.apples.Count < appleCount)
             {
-                var newApple = controller.NewApple(apples, tanks, kolobok,walls, rivers);
+                var newApple = controller.NewApple(game.apples, game.tanks, game.kolobok, game.walls, game.rivers);
                 if (newApple != null)
                 {
-                    apples.Add(newApple);
+                    game.apples.Add(newApple);
                 }
             }
         }
@@ -404,24 +391,24 @@ namespace Battle_City
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             Graphics graphics = e.Graphics;
-            graphics.DrawImage(kolobok.Image, kolobok.PositionX, kolobok.PositionY);
-            foreach(Wall wall in walls)
+            graphics.DrawImage(game.kolobok.Image, game.kolobok.PositionX, game.kolobok.PositionY);
+            foreach(Wall wall in game.walls)
             {
                 graphics.DrawImage(wall.Image, wall.PositionX, wall.PositionY, wall.Width, wall.Height);
             }
-            foreach(River river in rivers)
+            foreach(River river in game.rivers)
             {
                 graphics.DrawImage(river.Image, river.PositionX, river.PositionY, river.Width, river.Height);
             }
-            foreach (Apple apple in apples)
+            foreach (Apple apple in game.apples)
             {
                 graphics.DrawImage(apple.Image, apple.PositionX, apple.PositionY, apple.Width, apple.Height);
             }
-            foreach (Bound bound in bounds)
+            foreach (Bound bound in game.bounds)
             {
                 graphics.DrawImage(bound.Image, bound.PositionX, bound.PositionY, bound.Width, bound.Height);
             }
-            foreach (Tank tank in tanks)
+            foreach (Tank tank in game.tanks)
             {
                 graphics.DrawImage(tank.Image, tank.PositionX, tank.PositionY, tank.Width, tank.Height);
             }
@@ -429,7 +416,10 @@ namespace Battle_City
             {
                 graphics.DrawImage(bullet.Image, bullet.PositionX, bullet.PositionY, bullet.Width, bullet.Height);
             }
-
+            foreach(Explosion explosion in game.explosions)
+            {
+                graphics.DrawImage(explosion.Image, explosion.PositionX, explosion.PositionY, explosion.Width, explosion.Height);
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)

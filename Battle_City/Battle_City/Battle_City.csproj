@@ -57,6 +57,8 @@
     <Compile Include="Battle_City.Designer.cs">
       <DependentUpon>Battle_City.cs</DependentUpon>
     </Compile>
+    <Compile Include="Explosion.cs" />
+    <Compile Include="Game.cs" />
     <Compile Include="InformationForm.cs">
       <SubType>Form</SubType>
     </Compile>

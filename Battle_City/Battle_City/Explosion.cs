@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace Battle_City
 {
-    public class River : Borders
+    public class Explosion : Entity
     {
-        public River(int posX, int posY) : base(posX, posY)
+        public Explosion(int posX, int posY) : base(posX, posY)
         {
             PositionX = posX;
             PositionY = posY;
-            Height = 50;
-            Width = 200;
-            Image = new Bitmap(@"..\..\images\river.jpg");
+            Width = 35;
+            Height = 35;
+            Image = new Bitmap(@"..\..\images\explosion.jpg");
         }
     }
 }
