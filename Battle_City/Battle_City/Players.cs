@@ -77,25 +77,27 @@ namespace Battle_City
                     break;
             }
         }
-        public void StopNearBorders()
+        public void RotateDirection()
         {
-            switch (Direction) {
-                case Direction.LEFT:
-                    this.Direction = Direction.RIGHT;
-                    break;
-                case Direction.RIGHT:
-                    this.Direction = Direction.LEFT;
+            switch (Direction)
+            {
+                case Direction.DOWN:
+                    PositionY -= Speed + 2;
+                    Direction = Direction.UP;
                     break;
                 case Direction.UP:
-                    this.Direction = Direction.DOWN;
+                    PositionY += Speed + 2;
+                    Direction = Direction.DOWN;
                     break;
-                case Direction.DOWN:
-                    this.Direction = Direction.UP;
+                case Direction.LEFT:
+                    PositionX += Speed + 2;
+                    Direction = Direction.RIGHT;
                     break;
-                default:break;
-
+                case Direction.RIGHT:
+                    PositionX -= Speed + 2;
+                    Direction = Direction.LEFT;
+                    break;
             }
-
         }
     }
 }

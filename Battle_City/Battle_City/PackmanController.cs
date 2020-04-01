@@ -7,6 +7,7 @@ namespace Battle_City
 {
     class PackmanController
     {
+        
         public PackmanController(int speed)
         {
             this.speed = speed;
@@ -20,27 +21,34 @@ namespace Battle_City
         }
         public void KeyPress(KeyEventArgs e, Kolobok entity)
         {
-            if(e.KeyCode.ToString() == "Left")
+            
+            switch (e.KeyCode.ToString())
             {
-                entity.Direction = Direction.LEFT;
-            }
-            if(e.KeyCode.ToString() == "Right")
-            {
-                entity.Direction = Direction.RIGHT;
-            }
-            if (e.KeyCode.ToString() == "Up")
-            {
-                entity.Direction = Direction.UP;
-            }
-            if (e.KeyCode.ToString() == "Down")
-            {
-                entity.Direction = Direction.DOWN;
-            }
-            if (e.KeyCode.ToString() == "Space")
-            {
-                bullets.Add(entity.Shoot());
-            }
+                case "Left":
+                    entity.Direction = Direction.LEFT;
+                    break;
+                case "Right":
 
+                    entity.Direction = Direction.RIGHT;
+                    break;
+                case "Up":
+
+                    entity.Direction = Direction.UP;
+                    break;
+                case "Down":
+                    entity.Direction = Direction.DOWN;
+
+                    break;
+                case "Space":
+                    if (entity.canShot)
+                    {
+                        bullets.Add(entity.Shoot());
+                        entity.canShot = false;
+                    }
+                    break;
+                
+
+            }
         }
         public void TankShoot(Tank tank)
         {
@@ -53,7 +61,7 @@ namespace Battle_City
             return r1.IntersectsWith(r2);
         }
 
-        public Apple NewApple(List<Apple> apples, List<Tank> tanks, Kolobok kolobok, List<Wall> walls,List<River> rivers)
+        public Apple NewApple(List<Apple> apples, List<Tank> tanks, Kolobok kolobok, List<Wall> walls,List<River> rivers,List<Block> blocks)
         {
             int positionX;
             int positionY;
@@ -81,6 +89,13 @@ namespace Battle_City
                     return null;
                 }
             }
+            foreach (Block block in blocks)
+            {
+                if (CheckColisions(block, apple))
+                {
+                    return null;
+                }
+            }
             if (CheckColisions(apple, kolobok))
             {
                 return null;
@@ -94,7 +109,7 @@ namespace Battle_City
             }
             return apple;
         }
-        public Tank NewTank(List<Tank> tanks, Kolobok kolobok,int numer, List<Wall> walls, List<River> rivers)
+        public Tank NewTank(List<Tank> tanks, Kolobok kolobok,int numer, List<Wall> walls, List<River> rivers, List<Block> blocks)
         {
             int positionX;
             int positionY;
@@ -118,6 +133,13 @@ namespace Battle_City
             foreach (River river in rivers)
             {
                 if (CheckColisions(river, newTank))
+                {
+                    return null;
+                }
+            }
+            foreach (Block block in blocks)
+            {
+                if (CheckColisions(block, newTank))
                 {
                     return null;
                 }

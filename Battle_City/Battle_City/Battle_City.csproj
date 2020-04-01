@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Apple.cs" />
+    <Compile Include="Block.cs" />
     <Compile Include="Borders.cs" />
     <Compile Include="Bound.cs" />
     <Compile Include="Bullet.cs" />

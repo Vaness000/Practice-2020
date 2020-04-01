@@ -17,6 +17,7 @@ namespace Battle_City
         public List<River> rivers = new List<River>();
         public List<Explosion> explosions = new List<Explosion>();
         public List<Bound> bounds;
+        public List<Block> blocks = new List<Block>();
         public List<Tank> tanks = new List<Tank>();
         public Game(int width,int height,int speed)
         {
@@ -34,68 +35,29 @@ namespace Battle_City
         
         public void CreateWalls()
         {
-            walls.Add(new Wall(210, 300));
-            walls.Add(new Wall(260, 300));
-            walls.Add(new Wall(310, 100));
-            walls.Add(new Wall(310, 150));
-            walls.Add(new Wall(310, 200));
+            walls.Add(new Wall(210, 550));
+            walls.Add(new Wall(160, 550));
+            walls.Add(new Wall(110, 550));
+            walls.Add(new Wall(260, 550));
+            walls.Add(new Wall(310, 550));
+            walls.Add(new Wall(360, 550));
+            walls.Add(new Wall(80, 150));
+            walls.Add(new Wall(80, 200));
+        }
+        public void CreateBlock()
+        {
+            blocks.Add(new Block(550, 120));
+            blocks.Add(new Block(550, 170));
+            blocks.Add(new Block(150, 420));
+            blocks.Add(new Block(200, 420));
+            blocks.Add(new Block(490, 520));
+            blocks.Add(new Block(490, 570));
         }
         public void CreateRiver()
         {
-            rivers.Add(new River(200, 50));
+            rivers.Add(new River(200, 100));
             rivers.Add(new River(400, 400));
         }
-        public void CreateTanks(int tankCount)
-        {
-            int num = 0;
-            tanks.Clear();
-            while (tanks.Count < tankCount)
-            {
-                num++;
-                Tank tank = NewTank(num);
-                if (tank != null)
-                {
-                    tanks.Add(tank);
-                }
-                else
-                {
-                    continue;
-                }
-            }
-        }
-        public Tank NewTank(int numer)
-        {
-            int positionX;
-            int positionY;
-            positionX = random.Next(50, 600);
-            positionY = random.Next(50, 600);
-            Tank newTank = new Tank(positionX, positionY, numer, speed);
-            foreach (Tank tank in tanks)
-            {
-                if (controller.CheckColisions(tank, newTank))
-                {
-                    return null;
-                }
-            }
-            foreach (Wall wall in walls)
-            {
-                if (controller.CheckColisions(wall, newTank))
-                {
-                    return null;
-                }
-            }
-            foreach (River river in rivers)
-            {
-                if (controller.CheckColisions(river, newTank))
-                {
-                    return null;
-                }
-            }
-            if (controller.CheckColisions(newTank, kolobok))
-            {
-                return null;
-            }
-            return newTank;
-        }
+        
     }
 }

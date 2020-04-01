@@ -10,10 +10,11 @@ namespace Battle_City
      public class Tank : Players
     {
         public int numer;
-        
+        public bool marked;
         Random rnd = new Random();
         public Tank(int posX, int posY, int num, int speed) : base(posX, posY,speed)
         {
+            marked = false;
             PositionX = posX;
             PositionY = posY;
             numer = num;
