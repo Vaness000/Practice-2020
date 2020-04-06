@@ -422,7 +422,7 @@ namespace Battle_City
             }
         }
 
-        private void Form1_Paint(object sender, PaintEventArgs e)
+        private void PaintBattlefield(object sender, PaintEventArgs e)
         {
             Graphics graphics = e.Graphics;
             graphics.DrawImage(game.kolobok.Image, game.kolobok.PositionX, game.kolobok.PositionY);
