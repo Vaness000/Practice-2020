@@ -106,5 +106,44 @@
   <ItemGroup>
     <None Include="images\kolobok.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tankUp.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\tank.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\tankDown.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\tankLeft.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\tankRight.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\KolobokBullet.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\TankBullet.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\apple.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\explosion.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\block.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\bound.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\river.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="images\wall.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

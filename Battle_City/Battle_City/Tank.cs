@@ -19,7 +19,7 @@ namespace Battle_City
             PositionY = posY;
             numer = num;
             Speed = speed;
-            Image = new Bitmap(@"..\..\images\tank.jpg");
+            Image = Properties.Resources.tankUp;
             Direction = SetDirection(rnd.Next(1, 4));
         }
         public Direction SetDirection(int probability)
@@ -34,7 +34,7 @@ namespace Battle_City
         }
         public Bullet Shoot()
         {
-            return new Bullet(this.PositionX, this.PositionY, this.Direction, this,Speed);
+            return new Bullet(this.PositionX, this.PositionY, this.Direction, this,Speed, Properties.Resources.TankBullet,true);
         }
 
         public override bool Equals(object o)
@@ -72,6 +72,29 @@ namespace Battle_City
                     this.Direction = Direction.RIGHT;
                     break;
                 default: break;
+            }
+        }
+        public override void Move()
+        {
+            if (this.Direction == Direction.LEFT)
+            {
+                Image = Properties.Resources.tankLeft;
+                this.PositionX -= this.Speed;
+            }
+            if (this.Direction == Direction.RIGHT)
+            {
+                Image = Properties.Resources.tankRight;
+                this.PositionX += this.Speed;
+            }
+            if (this.Direction == Direction.UP)
+            {
+                Image = Properties.Resources.tankUp;
+                this.PositionY -= this.Speed;
+            }
+            if (this.Direction == Direction.DOWN)
+            {
+                Image = Properties.Resources.tankDown;
+                this.PositionY += this.Speed;
             }
         }
     }

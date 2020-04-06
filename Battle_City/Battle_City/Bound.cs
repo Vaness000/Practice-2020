@@ -15,7 +15,7 @@ namespace Battle_City
             this.Width = width;
             this.Perforating = false;
             this.Destructibility = false;
-            this.Image = new Bitmap(@"..\..\images\bound.jpg");
+            this.Image = Properties.Resources.bound;
         }
     }
 

@@ -12,16 +12,20 @@ namespace Battle_City
 {
     public partial class InformationForm : Form
     {
-        public InformationForm(int count)
+        public InformationForm()
         {
             InitializeComponent();
-            dataGridView1.RowCount = count;
+            
         }
-        public void UpdateDGW(string obj, int posX, int posY, int row)
+        public void UpdateDGW(List<Entity> list)
         {
-            dataGridView1.Rows[row].Cells[0].Value = obj;
-            dataGridView1.Rows[row].Cells[1].Value = posX;
-            dataGridView1.Rows[row].Cells[2].Value = posY;
+            dataGridView1.RowCount = list.Count;
+            for(int i = 0; i < list.Count; i++)
+            {
+            dataGridView1.Rows[i].Cells[0].Value = list[i].ToString();
+            dataGridView1.Rows[i].Cells[1].Value = list[i].PositionX;
+            dataGridView1.Rows[i].Cells[2].Value = list[i].PositionY;
+            }
         }
 
         private void InformationForm_FormClosing(object sender, FormClosingEventArgs e)

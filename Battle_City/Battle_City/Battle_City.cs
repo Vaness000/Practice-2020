@@ -142,9 +142,7 @@ namespace Battle_City
             game.CreateBlock();
             CreateTanks();
             CreateApples();
-            entities.Add(game.kolobok);
-            entities.AddRange(game.tanks);
-            entities.AddRange(game.apples);
+            
             
             KeyPreview = true;
             startButton.Enabled = false;
@@ -165,7 +163,7 @@ namespace Battle_City
             
             timer3.Tick += ClearExplosion();
             timer3.Start();
-            infoForm = new InformationForm(entities.Count);
+            infoForm = new InformationForm();
             infoForm.Show();
             Focus();
             score = 0;
@@ -217,8 +215,10 @@ namespace Battle_City
 
         private void Update(object sender, EventArgs e)
         {
+            entities.Add(game.kolobok);
+            entities.AddRange(game.tanks);
+            entities.AddRange(game.apples);
             Unmarked();
-            
             Recovery();
             game.kolobok.Move();
 
@@ -233,17 +233,16 @@ namespace Battle_City
             }
 
             label1.Text = score.ToString();
-            
-            for( int i = 0; i < entities.Count; i++)
-            {
-                infoForm.UpdateDGW(entities[i].ToString(),entities[i].PositionX,entities[i].PositionY,i);
-            }
+            infoForm.UpdateDGW(entities);
+
             if (IsGameOver())
             {
                 GameOver();
             }
+
             CheckBounds();
             pictureBox1.Invalidate();
+            entities.Clear();
         }
 
         public void CheckBounds()
@@ -252,9 +251,8 @@ namespace Battle_City
             {
                 if (controller.CheckColisions(game.kolobok, bound))
                 {
-                    game.kolobok.StopKolobok();
+                    game.kolobok.RotateDirection();
                     break;
-                    
                 }
             }
             for (int i = 0; i < game.apples.Count; i++)
@@ -331,7 +329,7 @@ namespace Battle_City
             {
                 if (controller.CheckColisions(game.kolobok, wall1))
                 {
-                    game.kolobok.StopKolobok();
+                    game.kolobok.RotateDirection();
                     break;
                 }
             }
@@ -339,7 +337,7 @@ namespace Battle_City
             {
                 if (controller.CheckColisions(game.kolobok, river1))
                 {
-                    game.kolobok.StopKolobok();
+                    game.kolobok.RotateDirection();
                     break;
                 }
             }
@@ -347,7 +345,7 @@ namespace Battle_City
             {
                 if (controller.CheckColisions(game.kolobok, block))
                 {
-                    game.kolobok.StopKolobok();
+                    game.kolobok.RotateDirection();
                     break;
                 }
             }

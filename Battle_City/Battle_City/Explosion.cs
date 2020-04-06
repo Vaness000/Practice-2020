@@ -15,7 +15,7 @@ namespace Battle_City
             PositionY = posY;
             Width = 35;
             Height = 35;
-            Image = new Bitmap(@"..\..\images\explosion.jpg");
+            Image = Properties.Resources.explosion;
         }
     }
 }

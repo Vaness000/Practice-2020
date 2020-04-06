@@ -14,7 +14,7 @@ namespace Battle_City
             PositionX = posX;
             PositionY = posY;
             Destructibility = false;
-            Image = new Bitmap(@"..\..\images\block.jpg");
+            Image = Properties.Resources.block;
             Width = 50;
             Height = 50;
         }

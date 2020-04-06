@@ -13,7 +13,7 @@ namespace Battle_City
         {
             PositionX = posX;
             PositionY = posY;
-            Image = new Bitmap(@"..\..\images\wall.jpg");
+            Image = Properties.Resources.wall;
             Width = 50;
             Height = 50;
             Destructibility = true;

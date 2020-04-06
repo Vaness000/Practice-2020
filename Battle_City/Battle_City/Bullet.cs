@@ -11,7 +11,7 @@ namespace Battle_City
     {
         Players sender;
         public bool dangerous;
-        public Bullet(int posX, int posY,Direction direction, Players player,int speed) : base(posX, posY,speed)
+        public Bullet(int posX, int posY,Direction direction, Players player,int speed, Image image, bool dangerous) : base(posX, posY,speed)
         {
             PositionX = posX + player.Width / 2;
             PositionY = posY + player.Height / 2;
@@ -20,24 +20,8 @@ namespace Battle_City
             Width = 10;
             Height = 10;
             sender = player;
-            Image = SetImage();
-        }
-
-        private Image SetImage()
-        {
-            Image img;
-            if(sender is Kolobok)
-            {
-                this.dangerous = false;
-                img = new Bitmap(@"..\..\images\KolobokBullet.png");
-            }
-            else
-            {
-                this.dangerous = true;
-                img = new Bitmap(@"..\..\images\TankBullet.png");
-            }
-            return img;
-            
+            Image = image;
+            this.dangerous = dangerous;
         }
     }
 }
