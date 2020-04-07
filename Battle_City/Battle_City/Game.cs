@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,8 @@ namespace Battle_City
         PackmanController controller;
         Random random = new Random();
         int speed;
+        int width;
+        int height;
         public Kolobok kolobok;
         public List<Wall> walls = new List<Wall>();
         public List<Apple> apples = new List<Apple>();
@@ -21,6 +24,8 @@ namespace Battle_City
         public List<Tank> tanks = new List<Tank>();
         public Game(int width,int height,int speed)
         {
+            this.height = height;
+            this.width = width;
             kolobok = new Kolobok(150, 150, speed);
             this.speed = speed;
             controller = new PackmanController(speed);
@@ -32,31 +37,35 @@ namespace Battle_City
             new Bound(width-10,0,10, height)
             };
         }
-        
-        public void CreateWalls()
+        public void CreateLevel()
         {
-            walls.Add(new Wall(210, 550));
-            walls.Add(new Wall(160, 550));
-            walls.Add(new Wall(110, 550));
-            walls.Add(new Wall(260, 550));
-            walls.Add(new Wall(310, 550));
-            walls.Add(new Wall(360, 550));
-            walls.Add(new Wall(80, 150));
-            walls.Add(new Wall(80, 200));
-        }
-        public void CreateBlock()
-        {
-            blocks.Add(new Block(550, 120));
-            blocks.Add(new Block(550, 170));
-            blocks.Add(new Block(150, 420));
-            blocks.Add(new Block(200, 420));
-            blocks.Add(new Block(490, 520));
-            blocks.Add(new Block(490, 570));
-        }
-        public void CreateRiver()
-        {
-            rivers.Add(new River(200, 100));
-            rivers.Add(new River(400, 400));
+            using (StreamReader reader = File.OpenText(@"../../level.txt"))
+            {
+                for(int i = 0; i < height; i += 50)
+                {
+                    for(int j = 0; j < width; j += 50)
+                    {
+                        char c = (char)reader.Read();
+                        switch (c)
+                        {
+                            case 'r':
+                                rivers.Add(new River(j, i));
+                                break;
+                            case 'w':
+                                walls.Add(new Wall(j, i));
+                                break;
+                            case 'b':
+                                blocks.Add(new Block(j, i));
+                                break;
+                            case ' ':
+                                continue;
+                            case '\n':
+                                j = width;
+                                break;
+                        }
+                    }
+                }
+            }
         }
         
     }

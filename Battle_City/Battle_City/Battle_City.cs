@@ -137,9 +137,7 @@ namespace Battle_City
         {
             game.kolobok.PositionX = 150;
             game.kolobok.PositionX = 150;
-            game.CreateRiver();
-            game.CreateWalls();
-            game.CreateBlock();
+            game.CreateLevel();
             CreateTanks();
             CreateApples();
             

@@ -14,7 +14,7 @@ namespace Battle_City
             PositionX = posX;
             PositionY = posY;
             Height = 50;
-            Width = 200;
+            Width = 50;
             Image = Properties.Resources.river;
         }
     }
