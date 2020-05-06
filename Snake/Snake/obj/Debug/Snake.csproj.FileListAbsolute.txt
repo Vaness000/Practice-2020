@@ -1,6 +1,0 @@
-E:\Epam\Practice 2020\Snake\Snake\bin\Debug\Snake.exe.config
-E:\Epam\Practice 2020\Snake\Snake\bin\Debug\Snake.exe
-E:\Epam\Practice 2020\Snake\Snake\bin\Debug\Snake.pdb
-E:\Epam\Practice 2020\Snake\Snake\obj\Debug\Snake.csprojAssemblyReference.cache
-E:\Epam\Practice 2020\Snake\Snake\obj\Debug\Snake.exe
-E:\Epam\Practice 2020\Snake\Snake\obj\Debug\Snake.pdb
