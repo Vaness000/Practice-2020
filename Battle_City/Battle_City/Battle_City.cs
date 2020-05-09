@@ -38,7 +38,49 @@ namespace Battle_City
             
         }
 
-
+        public Bitmap DrawGameImage()//формирую одно изображение из изображений объектов игры
+        {
+            Bitmap gameField = new Bitmap(width, height);
+            
+                using(Graphics graphics = Graphics.FromImage(gameField))
+                {
+                    graphics.DrawImage(game.kolobok.Image, game.kolobok.PositionX, game.kolobok.PositionY);
+                    foreach (Wall wall in game.walls)
+                    {
+                        graphics.DrawImage(wall.Image, wall.PositionX, wall.PositionY, wall.Width, wall.Height);
+                    }
+                    foreach (River river in game.rivers)
+                    {
+                        graphics.DrawImage(river.Image, river.PositionX, river.PositionY, river.Width, river.Height);
+                    }
+                    foreach (Apple apple in game.apples)
+                    {
+                        graphics.DrawImage(apple.Image, apple.PositionX, apple.PositionY, apple.Width, apple.Height);
+                    }
+                    foreach (Bound bound in game.bounds)
+                    {
+                        graphics.DrawImage(bound.Image, bound.PositionX, bound.PositionY, bound.Width, bound.Height);
+                    }
+                    foreach (Tank tank in game.tanks)
+                    {
+                        graphics.DrawImage(tank.Image, tank.PositionX, tank.PositionY, tank.Width, tank.Height);
+                    }
+                    foreach (Bullet bullet in controller.bullets)
+                    {
+                        graphics.DrawImage(bullet.Image, bullet.PositionX, bullet.PositionY, bullet.Width, bullet.Height);
+                    }
+                    foreach (Block block in game.blocks)
+                    {
+                        graphics.DrawImage(block.Image, block.PositionX, block.PositionY, block.Width, block.Height);
+                    }
+                    foreach (Explosion explosion in game.explosions)
+                    {
+                        graphics.DrawImage(explosion.Image, explosion.PositionX, explosion.PositionY, explosion.Width, explosion.Height);
+                    }
+                }
+                return gameField;
+            
+        }
         public void OnKeyPress1(object sender, KeyEventArgs e)
         {
             controller.KeyPress(e, game.kolobok);
@@ -239,7 +281,7 @@ namespace Battle_City
             }
 
             CheckBounds();
-            pictureBox1.Invalidate();
+            pictureBox1.Image = DrawGameImage();//передаю это изображение в свойство
             entities.Clear();
         }
 
@@ -420,44 +462,7 @@ namespace Battle_City
             }
         }
 
-        private void PaintBattlefield(object sender, PaintEventArgs e)
-        {
-            Graphics graphics = e.Graphics;
-            graphics.DrawImage(game.kolobok.Image, game.kolobok.PositionX, game.kolobok.PositionY);
-            foreach(Wall wall in game.walls)
-            {
-                graphics.DrawImage(wall.Image, wall.PositionX, wall.PositionY, wall.Width, wall.Height);
-            }
-            foreach(River river in game.rivers)
-            {
-                graphics.DrawImage(river.Image, river.PositionX, river.PositionY, river.Width, river.Height);
-            }
-            foreach (Apple apple in game.apples)
-            {
-                graphics.DrawImage(apple.Image, apple.PositionX, apple.PositionY, apple.Width, apple.Height);
-            }
-            foreach (Bound bound in game.bounds)
-            {
-                graphics.DrawImage(bound.Image, bound.PositionX, bound.PositionY, bound.Width, bound.Height);
-            }
-            foreach (Tank tank in game.tanks)
-            {
-                graphics.DrawImage(tank.Image, tank.PositionX, tank.PositionY, tank.Width, tank.Height);
-            }
-            foreach (Bullet bullet in controller.bullets)
-            {
-                graphics.DrawImage(bullet.Image, bullet.PositionX, bullet.PositionY, bullet.Width, bullet.Height);
-            }
-            foreach(Block block in game.blocks)
-            {
-                graphics.DrawImage(block.Image, block.PositionX, block.PositionY, block.Width, block.Height);
-            }
-            foreach(Explosion explosion in game.explosions)
-            {
-                graphics.DrawImage(explosion.Image, explosion.PositionX, explosion.PositionY, explosion.Width, explosion.Height);
-            }
-
-        }
+        
 
         private void Form1_Load(object sender, EventArgs e)
         {

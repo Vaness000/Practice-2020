@@ -145,5 +145,8 @@
   <ItemGroup>
     <None Include="images\wall.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="level.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
